@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - InsureAI{% endblock %}
+
+{% block content %}
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    }
+    .mesh-bg {
+        background: fixed linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #d1fae5 100%);
+        min-height: 100vh;
+        margin: -2rem -1rem; /* Offset container padding */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="mesh-bg">
+    <div class="glass-card p-8 rounded-2xl w-full max-w-md">
+        <h2 class="text-3xl font-extrabold mb-8 text-[var(--color-brand-blue)] text-center">Ravi de vous revoir</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-1">
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.username.label }}
+                </label>
+                <div class="relative">
+                    {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                    <p class="text-error text-xs mt-1 animate-pulse">{{ form.username.errors|striptags }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-1">
+                <div class="flex justify-between items-center">
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                        {{ form.password.label }}
+                    </label>
+                    <a href="#" class="text-xs text-[var(--color-brand-blue)] hover:underline">Oublié ?</a>
+                </div>
+                <div class="relative">
+                    {{ form.password }}
+                </div>
+                {% if form.password.errors %}
+                    <p class="text-error text-xs mt-1 animate-pulse">{{ form.password.errors|striptags }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit"
+                    class="w-full py-3 px-4 bg-[var(--color-brand-blue)] hover:bg-[var(--color-brand-red-dark)] text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-[var(--color-brand-blue)]/30 transform hover:-translate-y-1">
+                Se connecter
+            </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-white/20 text-center">
+            <p class="text-gray-600 text-sm">
+                Pas encore de compte ? 
+                <a href="{% url 'user:signup' %}" class="text-[var(--color-brand-red-dark)] font-bold hover:underline ml-1">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

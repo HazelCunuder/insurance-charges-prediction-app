@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil - InsureAI{% endblock %}
+
+{% block content %}
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    }
+    .mesh-bg-profile {
+        background: fixed linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #d1fae5 100%);
+        min-height: 100vh;
+        margin: -2rem -1rem; /* Offset container padding */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1rem;
+    }
+</style>
+
+<div class="mesh-bg-profile">
+    <div class="glass-card p-10 rounded-3xl w-full max-w-2xl">
+        <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 mb-10">
+            <!-- Avatar Placeholder logic -->
+            <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-[var(--color-brand-blue)] to-[var(--color-brand-red-light)] flex items-center justify-center text-white text-5xl font-bold uppercase shadow-2xl">
+                {{ user.first_name|first }}{{ user.last_name|first }}
+            </div>
+            
+            <div class="flex-1 text-center md:text-left">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-2">{{ user.get_full_name }}</h2>
+                <div class="inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-white/20 border border-white/40 text-[var(--color-brand-blue)] uppercase tracking-wider mb-4">
+                    {{ user.get_role_display }}
+                </div>
+                <p class="text-gray-600 flex items-center justify-center md:justify-start">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    {{ user.email }}
+                </p>
+            </div>
+            
+            <a href="#" class="btn btn-circle btn-ghost border border-white/40">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 border-b border-white/20 pb-2">Statistiques</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-2xl bg-white/10 border border-white/20">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Prédictions</p>
+                        <p class="text-2xl font-black text-[var(--color-brand-blue)]">{{ user.predictions.count }}</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/10 border border-white/20">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Score Santé</p>
+                        <p class="text-2xl font-black text-green-600">A+</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 border-b border-white/20 pb-2">Actions Rapides</h3>
+                <div class="flex flex-col space-y-3">
+                    <a href="#" class="btn bg-white/20 hover:bg-white/40 border-none text-gray-800">
+                        Tableau de bord
+                    </a>
+                    <a href="{% url 'user:logout' %}" class="btn btn-ghost text-red-600 hover:bg-red-50/50">
+                        Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

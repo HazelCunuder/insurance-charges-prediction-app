@@ -1,26 +1,27 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <title>Django Tailwind</title>
+    <title>{% block title %}Insurance App{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% tailwind_css %}
 </head>
 
-<body class="bg-gray-50 text-black font-serif leading-normal tracking-normal">
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
 
-    <div class="toast toast-top toast-end">
-        <div class="alert alert-info">
-            <span>Hello from daisyUi 👋</span>
-        </div>
+    <div class="container mx-auto px-4 py-8">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} mb-6 max-w-md mx-auto shadow-sm">
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
     </div>
-
-<div class="container mx-auto">
-    <section class="flex items-center justify-center h-screen">
-        <h1 class="text-5xl">Django + Tailwind = ❤️</h1>
-    </section>
-</div>
 </body>
 </html>
