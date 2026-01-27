@@ -1,6 +1,6 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
     <title>{% block title %}Insurance App{% endblock %}</title>
     <meta charset="UTF-8">
@@ -9,19 +9,41 @@
     {% tailwind_css %}
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen selection:bg-[var(--color-brand-blue)] selection:text-white">
+    
+    <!-- Simple Navbar -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <a href="/" class="text-xl font-black tracking-tighter text-[var(--color-brand-blue)] flex items-center gap-2">
+            <span class="p-1.5 bg-[var(--color-brand-blue)] text-white rounded-lg">🛡️</span>
+            InsureAI
+        </a>
+        <div class="flex items-center gap-6">
+            {% if user.is_authenticated %}
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Bonjour, {{ user.first_name }}</span>
+                <a href="{% url 'user:profile' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">Profil</a>
+                <a href="{% url 'user:logout' %}" class="btn btn-ghost btn-sm text-red-500 font-bold">Déconnexion</a>
+            {% else %}
+                <a href="{% url 'user:login' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">Connexion</a>
+                <a href="{% url 'user:signup' %}" class="btn btn-sm bg-[var(--color-brand-blue)] text-white border-none shadow-lg shadow-blue-500/20 hover:scale-105 transition-transform">S'inscrire</a>
+            {% endif %}
+        </div>
+    </nav>
 
-    <div class="container mx-auto px-4 py-8">
+    {% block body_content %}
+    <div class="container mx-auto px-4 py-12">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} mb-6 max-w-md mx-auto shadow-sm">
-                    <span>{{ message }}</span>
-                </div>
-            {% endfor %}
+            <div class="space-y-4 mb-8 max-w-lg mx-auto">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} bg-white border border-gray-100 shadow-xl shadow-gray-200/50 rounded-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+                        <span class="text-sm font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
         {% block content %}
         {% endblock %}
     </div>
+    {% endblock %}
 </body>
 </html>

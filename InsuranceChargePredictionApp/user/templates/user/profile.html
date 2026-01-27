@@ -1,82 +1,83 @@
 {% extends 'base.html' %}
 
-{% block title %}Mon Profil - InsureAI{% endblock %}
+{% block title %}Tableau de Bord - {{ user.first_name }}{% endblock %}
 
 {% block content %}
-<style>
-    .glass-card {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    }
-    .mesh-bg-profile {
-        background: fixed linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #d1fae5 100%);
-        min-height: 100vh;
-        margin: -2rem -1rem; /* Offset container padding */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4rem 1rem;
-    }
-</style>
-
-<div class="mesh-bg-profile">
-    <div class="glass-card p-10 rounded-3xl w-full max-w-2xl">
-        <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 mb-10">
-            <!-- Avatar Placeholder logic -->
-            <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-[var(--color-brand-blue)] to-[var(--color-brand-red-light)] flex items-center justify-center text-white text-5xl font-bold uppercase shadow-2xl">
-                {{ user.first_name|first }}{{ user.last_name|first }}
+<div class="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-center bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 gap-8">
+        <div class="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
+            <div class="relative group">
+                <div class="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-[var(--color-brand-blue)] to-[var(--color-brand-red-light)] flex items-center justify-center text-white text-5xl font-black shadow-2xl shadow-blue-500/20 transform group-hover:rotate-3 transition-transform">
+                    {{ user.first_name|first }}{{ user.last_name|first }}
+                </div>
+                <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 border-4 border-white rounded-full shadow-lg"></div>
             </div>
             
-            <div class="flex-1 text-center md:text-left">
-                <h2 class="text-4xl font-extrabold text-gray-900 mb-2">{{ user.get_full_name }}</h2>
-                <div class="inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-white/20 border border-white/40 text-[var(--color-brand-blue)] uppercase tracking-wider mb-4">
-                    {{ user.get_role_display }}
+            <div>
+                <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+                    <h1 class="text-4xl font-black text-gray-900 tracking-tight">{{ user.get_full_name }}</h1>
+                    <span class="badge badge-lg bg-blue-50 text-[var(--color-brand-blue)] border-none font-bold uppercase tracking-widest text-[10px] py-3 px-4">
+                        {{ user.get_role_display }}
+                    </span>
                 </div>
-                <p class="text-gray-600 flex items-center justify-center md:justify-start">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
+                <p class="text-gray-500 font-medium flex items-center gap-2 justify-center md:justify-start">
+                    <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     {{ user.email }}
                 </p>
             </div>
-            
-            <a href="#" class="btn btn-circle btn-ghost border border-white/40">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                </svg>
-            </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="space-y-4">
-                <h3 class="text-lg font-bold text-gray-800 border-b border-white/20 pb-2">Statistiques</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-4 rounded-2xl bg-white/10 border border-white/20">
-                        <p class="text-xs text-gray-500 uppercase font-bold">Prédictions</p>
-                        <p class="text-2xl font-black text-[var(--color-brand-blue)]">{{ user.predictions.count }}</p>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-white/10 border border-white/20">
-                        <p class="text-xs text-gray-500 uppercase font-bold">Score Santé</p>
-                        <p class="text-2xl font-black text-green-600">A+</p>
-                    </div>
-                </div>
-            </div>
+        <div class="flex gap-4">
+            <button class="btn btn-outline border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-700 px-8 rounded-2xl normal-case font-bold h-14">
+                Modifier le profil
+            </button>
+        </div>
+    </div>
 
-            <div class="space-y-4">
-                <h3 class="text-lg font-bold text-gray-800 border-b border-white/20 pb-2">Actions Rapides</h3>
-                <div class="flex flex-col space-y-3">
-                    <a href="#" class="btn bg-white/20 hover:bg-white/40 border-none text-gray-800">
-                        Tableau de bord
-                    </a>
-                    <a href="{% url 'user:logout' %}" class="btn btn-ghost text-red-600 hover:bg-red-50/50">
-                        Déconnexion
-                    </a>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
+            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Total Prédictions</p>
+            <div class="flex items-end justify-between">
+                <h3 class="text-5xl font-black text-gray-900">{{ user.predictions.count|default:"0" }}</h3>
+                <div class="p-3 bg-blue-50 text-[var(--color-brand-blue)] rounded-2xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
             </div>
         </div>
+        
+        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
+            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Dernière Estim.</p>
+            <div class="flex items-end justify-between">
+                <h3 class="text-3xl font-black text-[var(--color-brand-blue)]">-- €</h3>
+                <div class="p-3 bg-green-50 text-green-600 rounded-2xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
+            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Statut Compte</p>
+            <div class="flex items-end justify-between">
+                <h3 class="text-3xl font-black text-green-500">Actif</h3>
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-2xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="bg-blue-600 p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-blue-600/30 overflow-hidden relative group">
+        <div class="relative z-10 text-center md:text-left space-y-4">
+            <h2 class="text-4xl font-black tracking-tight">Nouvelle Prédiction ?</h2>
+            <p class="text-blue-100 font-medium text-lg opacity-80">Nos algorithmes sont à jour avec les derniers tarifs 2026.</p>
+            <button class="btn btn-lg bg-white text-blue-600 border-none hover:bg-blue-50 hover:scale-105 transition-all px-12 rounded-2xl font-black mt-4">
+                Lancer le calcul
+            </button>
+        </div>
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-500 rounded-full blur-3xl opacity-20 group-hover:scale-125 transition-transform duration-1000"></div>
     </div>
 </div>
 {% endblock %}
