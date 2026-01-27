@@ -34,12 +34,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # Our Apps
-    'signup',
-    'login',
+    'user',
     'docs',
     'appointment',
     'predict',
-    'userProfile',
 
     # Django Apps
     'django.contrib.admin',
