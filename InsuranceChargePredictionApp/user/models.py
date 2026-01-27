@@ -23,9 +23,8 @@ class UserPredictiction(models.Model):
     user_age = models.PositiveIntegerField(verbose_name='Âge')
     user_gender = models.CharField(max_length=6, choices=GENDER_CHOICES, verbose_name='Genre')
 
-    user_height = models.FloatField(max_digits=3, decimal_places=2, verbose_name='Taille (en m)')
-    user_weight = models.FloatField(max_digits=5, decimal_places=2, verbose_name='Poids (en kg)')
-    user_bmi = round(user_weight / (user_height ** 2), 2)
+    user_height = models.FloatField(verbose_name='Taille (en m)')
+    user_weight = models.FloatField(verbose_name='Poids (en kg)')
 
     user_smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, verbose_name='Êtes-vous fumeur ?')
     user_children = models.PositiveIntegerField(verbose_name='Nombre d\'enfants')
