@@ -100,3 +100,54 @@ class CustomUserCreationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Cet email est déjà utilisé.")
         return email
+
+
+class UserProfileForm(forms.ModelForm):
+    """Formulaire de mise à jour du profil et des caractéristiques d'assurance"""
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "age",
+            "gender",
+            "height",
+            "weight",
+            "smoker",
+            "children",
+            "region",
+        )
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={"class": "input input-bordered w-full bg-white/50"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"class": "input input-bordered w-full bg-white/50"}
+            ),
+            "age": forms.NumberInput(
+                attrs={"class": "input input-bordered w-full bg-white/50"}
+            ),
+            "gender": forms.Select(
+                attrs={"class": "select select-bordered w-full bg-white/50"}
+            ),
+            "height": forms.NumberInput(
+                attrs={
+                    "class": "input input-bordered w-full bg-white/50",
+                    "step": "0.01",
+                }
+            ),
+            "weight": forms.NumberInput(
+                attrs={
+                    "class": "input input-bordered w-full bg-white/50",
+                    "step": "0.1",
+                }
+            ),
+            "smoker": forms.CheckboxInput(attrs={"class": "checkbox checkbox-primary"}),
+            "children": forms.NumberInput(
+                attrs={"class": "input input-bordered w-full bg-white/50"}
+            ),
+            "region": forms.Select(
+                attrs={"class": "select select-bordered w-full bg-white/50"}
+            ),
+        }

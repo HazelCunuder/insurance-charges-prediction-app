@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Tableau de Bord - {{ user.first_name }}{% endblock %}
 
@@ -29,55 +30,88 @@
         </div>
 
         <div class="flex gap-4">
-            <button class="btn btn-outline border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-700 px-8 rounded-2xl normal-case font-bold h-14">
+            <a href="#edit-profile" class="btn bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200 px-8 rounded-2xl normal-case font-bold h-14">
                 Modifier le profil
-            </button>
+            </a>
         </div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
-            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Total Prédictions</p>
-            <div class="flex items-end justify-between">
-                <h3 class="text-5xl font-black text-gray-900">{{ user.predictions.count|default:"0" }}</h3>
-                <div class="p-3 bg-blue-50 text-[var(--color-brand-blue)] rounded-2xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Stats & Info -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
+                <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">Résumé Assurance</p>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Âge</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.age|default:"--" }} ans</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">IMC</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.bmi|default:"--" }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Fumeur</span>
+                        <span class="text-sm font-black {% if user.smoker %}text-red-500{% else %}text-green-500{% endif %}">
+                            {{ user.smoker|yesno:"Oui,Non" }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Enfants</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.children }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
-            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Dernière Estim.</p>
-            <div class="flex items-end justify-between">
-                <h3 class="text-3xl font-black text-[var(--color-brand-blue)]">-- €</h3>
-                <div class="p-3 bg-green-50 text-green-600 rounded-2xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+
+            <div class="relative bg-blue-600 p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/20 overflow-hidden group">
+                <div class="relative z-10">
+                    <h3 class="text-xl font-black mb-2">Prêt pour une estimation ?</h3>
+                    <p class="text-blue-100 text-sm mb-6 opacity-80">Mettez à jour vos infos à droite pour un calcul précis.</p>
+                    <a href="/predict" class="btn btn-block bg-white text-blue-600 border-none hover:bg-blue-50 font-black rounded-xl">
+                        Lancer la prédiction
+                    </a>
+                </div>
+                <div class="hidden md:block absolute -right-4 -bottom-4 w-48 h-48 opacity-90 group-hover:scale-110 transition-transform duration-700">
+                    <img src="{% static 'images/dashboard_promo.png' %}" alt="Promo" class="w-full h-full object-contain">
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
-            <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Statut Compte</p>
-            <div class="flex items-end justify-between">
-                <h3 class="text-3xl font-black text-green-500">Actif</h3>
-                <div class="p-3 bg-purple-50 text-purple-600 rounded-2xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        <!-- Edit Form -->
+        <div id="edit-profile" class="lg:col-span-2 bg-white p-10 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100">
+            <h2 class="text-2xl font-black text-gray-900 mb-8 flex items-center gap-3">
+                <span class="p-3 bg-blue-50 text-[var(--color-brand-blue)] rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </span>
+                Modifier mes caractéristiques
+            </h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in form %}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-bold text-gray-700">{{ field.label }}</span>
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error font-semibold">{{ field.errors|striptags }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Center Content -->
-    <div class="bg-blue-600 p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-blue-600/30 overflow-hidden relative group">
-        <div class="relative z-10 text-center md:text-left space-y-4">
-            <h2 class="text-4xl font-black tracking-tight">Nouvelle Prédiction ?</h2>
-            <p class="text-blue-100 font-medium text-lg opacity-80">Nos algorithmes sont à jour avec les derniers tarifs 2026.</p>
-            <button class="btn btn-lg bg-white text-blue-600 border-none hover:bg-blue-50 hover:scale-105 transition-all px-12 rounded-2xl font-black mt-4">
-                Lancer le calcul
-            </button>
+                <div class="pt-6">
+                    <button type="submit" class="btn btn-block bg-[var(--color-brand-blue)] hover:bg-[var(--color-brand-red-dark)] text-white border-none font-black text-lg h-14 rounded-2xl shadow-xl shadow-blue-500/20 transition-all">
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-500 rounded-full blur-3xl opacity-20 group-hover:scale-125 transition-transform duration-1000"></div>
     </div>
 </div>
 {% endblock %}

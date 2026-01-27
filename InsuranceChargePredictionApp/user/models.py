@@ -52,6 +52,38 @@ class CustomUser(AbstractUser):
         _("rôle"), max_length=10, choices=ROLE_CHOICES, default="Client"
     )
 
+    # Caractéristiques liées à l'assurance (Brief requirements)
+    age = models.PositiveIntegerField(_("âge"), null=True, blank=True)
+    gender = models.CharField(
+        _("genre"),
+        max_length=10,
+        choices=[("female", _("Femme")), ("male", _("Homme"))],
+        null=True,
+        blank=True,
+    )
+    weight = models.FloatField(_("poids (kg)"), null=True, blank=True)
+    height = models.FloatField(_("taille (m)"), null=True, blank=True)
+    smoker = models.BooleanField(_("fumeur"), default=False)
+    children = models.PositiveIntegerField(_("nombre d'enfants"), default=0)
+    region = models.CharField(
+        _("région"),
+        max_length=20,
+        choices=[
+            ("northeast", _("Nord-Est")),
+            ("northwest", _("Nord-Ouest")),
+            ("southeast", _("Sud-Est")),
+            ("southwest", _("Sud-Ouest")),
+        ],
+        null=True,
+        blank=True,
+    )
+
+    @property
+    def bmi(self):
+        if self.height and self.height > 0 and self.weight:
+            return round(self.weight / (self.height**2), 1)
+        return None
+
     # Configuration
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name", "role"]
