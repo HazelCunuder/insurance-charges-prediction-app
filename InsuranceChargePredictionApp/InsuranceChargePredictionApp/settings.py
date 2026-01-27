@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third Party Apps
-
+    'tailwind',
+    'theme',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+TAILWIND_APP_NAME = 'theme'
+
+NPM_BIN_PATH = "/usr/bin/npm"
