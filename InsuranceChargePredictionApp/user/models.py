@@ -14,7 +14,7 @@ class UserAuthentification(models.Model):
         return f'Utilisateur : {self.first_name} {self.last_name} ({self.email})'
 
 
-class UserPredictiction(models.Model):
+class UserPrediction(models.Model):
     GENDER_CHOICES = [('female', 'Femme'), ('male', 'Homme')]
     SMOKER_CHOICES = [('yes', 'Oui'), ('no', 'Non')]
     REGION_CHOICES = [('northeast', 'Nord-Est'), ('northwest', 'Nord-Ouest'), ('southeast', 'Sud-Est'), ('southwest', 'Sud-Ouest')]
