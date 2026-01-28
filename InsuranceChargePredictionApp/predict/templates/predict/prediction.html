@@ -5,6 +5,7 @@
 {% block content %}
     <h2>Prédiction des charges d'assurance</h2>
 
+    <h3>Formulaire</h3>
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -15,4 +16,10 @@
         {% endfor %}
         <button type="submit">Prédire</button>
     </form>
+
+    {% if prediction %}
+        <h3>Résultat de la prédiction</h3>
+        <p>Estimation des charges : {{ prediction }} €</p>
+    {% endif %}
+
 {% endblock %}
