@@ -1,4 +1,4 @@
-# user/views.py
+# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -11,7 +11,7 @@ from .models import CustomUser
 
 
 class LoginView(FormView):
-    template_name = "user/login.html"
+    template_name = "accounts/login.html"
     form_class = CustomAuthenticationForm
     success_url = reverse_lazy("home")  # Redirige vers l'accueil par défaut
 
@@ -32,9 +32,9 @@ class LoginView(FormView):
 
 
 class SignupView(FormView):
-    template_name = "user/signup.html"
+    template_name = "accounts/signup.html"
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy("user:login")
+    success_url = reverse_lazy("accounts:login")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -57,7 +57,7 @@ class SignupView(FormView):
 
 
 class LogoutView(RedirectView):
-    url = reverse_lazy("user:login")
+    url = reverse_lazy("accounts:login")
 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -72,10 +72,12 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profil mis à jour avec succès !")
-            return redirect("user:profile")
+            return redirect("accounts:profile")
         else:
             messages.error(request, "Erreur lors de la mise à jour.")
     else:
         form = UserProfileForm(instance=request.user)
 
-    return render(request, "user/profile.html", {"user": request.user, "form": form})
+    return render(
+        request, "accounts/profile.html", {"user": request.user, "form": form}
+    )
