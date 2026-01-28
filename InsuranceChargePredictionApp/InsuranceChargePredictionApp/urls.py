@@ -21,7 +21,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", HomePageView.as_view(), name="home")
+    path("", HomePageView.as_view(), name="home"),
+
 ]
 
 if settings.DEBUG:
