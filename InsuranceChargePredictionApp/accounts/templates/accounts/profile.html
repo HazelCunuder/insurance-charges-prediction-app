@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de Bord - {{ user.first_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-center bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 gap-8">
+        <div class="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
+            <div class="relative group">
+                <div class="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-[var(--color-brand-blue)] to-[var(--color-brand-red-light)] flex items-center justify-center text-white text-5xl font-black shadow-2xl shadow-blue-500/20 transform group-hover:rotate-3 transition-transform">
+                    {{ user.first_name|first }}{{ user.last_name|first }}
+                </div>
+                <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 border-4 border-white rounded-full shadow-lg"></div>
+            </div>
+            
+            <div>
+                <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+                    <h1 class="text-4xl font-black text-gray-900 tracking-tight">{{ user.get_full_name }}</h1>
+                    <span class="badge badge-lg bg-blue-50 text-[var(--color-brand-blue)] border-none font-bold uppercase tracking-widest text-[10px] py-3 px-4">
+                        {{ user.get_role_display }}
+                    </span>
+                </div>
+                <p class="text-gray-500 font-medium flex items-center gap-2 justify-center md:justify-start">
+                    <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    {{ user.email }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <a href="#edit-profile" class="btn bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200 px-8 rounded-2xl normal-case font-bold h-14">
+                Modifier le profil
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Stats & Info -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white p-8 rounded-[2rem] shadow-lg shadow-gray-200/40 border border-gray-100">
+                <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">Résumé Assurance</p>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Âge</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.age|default:"--" }} ans</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">IMC</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.bmi|default:"--" }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Fumeur</span>
+                        <span class="text-sm font-black {% if user.smoker %}text-red-500{% else %}text-green-500{% endif %}">
+                            {{ user.smoker|yesno:"Oui,Non" }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-500">Enfants</span>
+                        <span class="text-sm font-black text-gray-900">{{ user.children }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative bg-blue-600 p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/20 overflow-hidden group">
+                <div class="relative z-10">
+                    <h3 class="text-xl font-black mb-2">Prêt pour une estimation ?</h3>
+                    <p class="text-blue-100 text-sm mb-6 opacity-80">Mettez à jour vos infos à droite pour un calcul précis.</p>
+                    <a href="/predict" class="btn btn-block bg-white text-blue-600 border-none hover:bg-blue-50 font-black rounded-xl">
+                        Lancer la prédiction
+                    </a>
+                </div>
+                <div class="hidden md:block absolute -right-4 -bottom-4 w-48 h-48 opacity-90 group-hover:scale-110 transition-transform duration-700">
+                    <img src="{% static 'images/dashboard_promo.png' %}" alt="Promo" class="w-full h-full object-contain">
+                </div>
+            </div>
+        </div>
+
+        <div id="edit-profile" class="lg:col-span-2 bg-white p-10 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100">
+            <h2 class="text-2xl font-black text-gray-900 mb-8 flex items-center gap-3">
+                <span class="p-3 bg-blue-50 text-[var(--color-brand-blue)] rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </span>
+                Modifier mes caractéristiques
+            </h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in form %}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-bold text-gray-700">{{ field.label }}</span>
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error font-semibold">{{ field.errors|striptags }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="pt-6">
+                    <button type="submit" class="btn btn-block bg-[var(--color-brand-blue)] hover:bg-[var(--color-brand-red-dark)] text-white border-none font-black text-lg h-14 rounded-2xl shadow-xl shadow-blue-500/20 transition-all">
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

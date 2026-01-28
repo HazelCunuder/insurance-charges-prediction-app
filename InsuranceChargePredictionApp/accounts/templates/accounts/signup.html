@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Création de Compte - Assur Aimant{% endblock %}
+
+{% block body_content %}
+<style>
+    @keyframes mesh-pulse {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .mesh-gradient-premium {
+        background: linear-gradient(-45deg, #fce7f3, #e0e7ff, #d1fae5, #ecfdf5);
+        background-size: 400% 400%;
+        animation: mesh-pulse 15s ease infinite;
+        min-height: calc(100vh - 72px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+    }
+    .elite-glass {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 10px 15px -3px rgba(0, 0, 0, 0.05),
+            0 4px 6px -2px rgba(0, 0, 0, 0.02),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+    }
+</style>
+
+<div class="mesh-gradient-premium">
+    <div class="elite-glass p-10 rounded-[2.5rem] w-full max-w-2xl animate-in fade-in zoom-in duration-500">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-black text-gray-900 tracking-tight mb-3">Rejoindre Assur Aimant</h2>
+            <p class="text-gray-500 font-medium text-lg">Prêt à anticiper votre budget santé ?</p>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-gray-700">{{ form.first_name.label }}</span></label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.first_name.errors|striptags }}</span></label>
+                    {% endif %}
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-gray-700">{{ form.last_name.label }}</span></label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.last_name.errors|striptags }}</span></label>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-control">
+                <label class="label"><span class="label-text font-bold text-gray-700">{{ form.email.label }}</span></label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.email.errors|striptags }}</span></label>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-4">
+                <label class="label p-0"><span class="label-text font-bold text-gray-700">{{ form.role.label }}</span></label>
+                <div class="grid grid-cols-1 gap-3">
+                    {% for value, label in form.role.field.choices %}
+                    <label class="flex items-center p-4 rounded-2xl border border-white/60 bg-white/10 hover:bg-white/40 cursor-pointer transition-all duration-300 group">
+                        <input type="radio" 
+                               name="{{ form.role.name }}" 
+                               value="{{ value }}"
+                               class="radio radio-primary mr-4"
+                               {% if form.role.value == value %}checked{% endif %}>
+                        <span class="text-sm font-bold text-gray-700 group-hover:text-gray-900">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-gray-700">{{ form.password1.label }}</span></label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.password1.errors|striptags }}</span></label>
+                    {% endif %}
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-gray-700">Confirmation</span></label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.password2.errors|striptags }}</span></label>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-block bg-[var(--color-brand-blue)] hover:bg-[var(--color-brand-red-dark)] border-none text-white font-black text-lg h-14 rounded-2xl shadow-2xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.01] mt-6">
+                Créer mon compte expert
+            </button>
+        </form>
+
+        <div class="mt-12 pt-8 border-t border-white/40 text-center">
+            <p class="text-gray-500 font-medium">
+                Déjà inscrit ? 
+                <a href="{% url 'accounts:login' %}" class="text-[var(--color-brand-red-dark)] font-black hover:underline ml-1">Connectez-vous</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
