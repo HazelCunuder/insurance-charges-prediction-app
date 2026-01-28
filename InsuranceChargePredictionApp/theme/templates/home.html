@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block script %}/static/javascript/home.js{% endblock %}
 {% block title %}Assur'Aimant{% endblock %}
 
 {% block content %}
@@ -40,4 +41,8 @@
             </div>
     </div>
 </section>
+
+<button id="scrollToTopBtn" class="fixed bottom-4 w-12 h-12 right-4 bg-brand-red-dark text-white p-3 rounded-full shadow-lg hover:bg-red-900 focus:outline-none">
+    ↑
+</button>
 {% endblock %}
