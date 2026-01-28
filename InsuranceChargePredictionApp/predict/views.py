@@ -42,7 +42,7 @@ class PredictionView(FormView):
             "region": [region]
         })
 
-        prediction_model_path = Path(__file__).parent / 'insurance_model.pkl'
+        prediction_model_path = Path(__file__).parent / 'insurance_model.joblib'
         prediction_model = joblib.load(prediction_model_path)
         prediction = prediction_model.predict(new_data)[0]
 
