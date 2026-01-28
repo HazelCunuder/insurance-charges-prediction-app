@@ -37,7 +37,7 @@ class PredictionView(FormView):
         prediction = prediction_model.predict(new_data)[0]
 
         rmse = joblib.load(rmse_model_path)
-        range = f"entre {round(prediction - rmse, 2)} € et {round(prediction + rmse, 2)} €"
+        range = f"entre {max(0, round(prediction - rmse, 2))} € et {round(prediction + rmse, 2)} €"
 
         context = self.get_context_data()
         context['form'] = form
