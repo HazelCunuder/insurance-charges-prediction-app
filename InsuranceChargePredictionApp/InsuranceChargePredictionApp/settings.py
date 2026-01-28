@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'InsuranceChargePredictionApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Correction : utilisation de Path
+        'NAME': os.getenv('DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
     }
 }
 
@@ -123,17 +123,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Pour collectstatic en production
+ 
 
 # Tailwind configuration
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "/usr/bin/npm"
 
-# SÉCURITÉ RECOMMANDÉE (AJOUTÉ)
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = "DENY"
