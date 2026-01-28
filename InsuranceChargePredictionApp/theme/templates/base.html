@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
-    <title>{% block title %}InsureAI{% endblock %}</title>
+    <title>{% block title %}Assur Aimant{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% tailwind_css %}
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col selection:bg-[var(--color-brand-blue)] selection:text-white">
+<body class="bg-gray-50 text-black font-serif min-h-screen flex flex-col selection:bg-[var(--color-brand-blue)] selection:text-white">
 
     {% now "U" as timestamp %}  {# timestamp pour forcer le rafraîchissement du logo #}
 
@@ -19,11 +19,11 @@
             <div class="h-12 w-12 rounded-xl bg-[var(--color-brand-blue)] p-1.5 shadow-lg shadow-blue-500/30 ring-4 ring-blue-500/10 
                         group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-500/40 
                         transition-all duration-300 flex items-center justify-center overflow-hidden">
-                <img src="{% static 'images/logo.png' %}?v={{ timestamp }}" alt="InsureAI Logo" class="h-full w-full object-contain drop-shadow-md">
+                <img src="{% static 'images/logo.png' %}?v={{ timestamp }}" alt="Assur Aimant Logo" class="h-full w-full object-contain drop-shadow-md">
             </div>
             <span class="text-2xl font-black tracking-tight text-[var(--color-brand-blue)] 
                          group-hover:text-blue-700 transition-colors duration-300">
-                InsureAI
+                Assur Aimant
             </span>
         </a>
 
@@ -75,11 +75,11 @@
 
                 <div class="flex items-center gap-2 opacity-80">
                     <img src="{% static 'images/logo.png' %}?v={{ timestamp }}" alt="Logo Footer" class="h-6 w-auto grayscale">
-                    <span class="font-bold text-gray-700">InsuranceAI</span>
+                    <span class="font-bold text-gray-700">Assur Aimant</span>
                 </div>
 
                 <div class="text-sm text-gray-500">
-                    &copy; {% now "Y" %} InsuranceAI. Tous droits réservés.
+                    &copy; {% now "Y" %} Assur Aimant. Tous droits réservés.
                 </div>
 
                 <div class="flex gap-6 text-sm font-medium text-gray-500">
