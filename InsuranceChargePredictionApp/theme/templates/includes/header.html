@@ -5,7 +5,7 @@
             <ul class="flex space-x-4">
                 <li><a href="{% url 'home' %}" class="hover:underline">Accueil</a></li>
                 {% if perms.advisor.make_prediction %}
-                <li><a href="" class="hover:underline">Prédiction</a></li>
+                <li><a href="{% url 'prediction' %}" class="hover:underline">Prédiction</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
                 <li><a href="" class="hover:underline">Profil</a></li>
@@ -13,11 +13,11 @@
             </ul>
             <section>
                 {% if not user.is_authenticated %}
-                <button class="bg-brand-red-dark text-white px-4 py-2 rounded"><a href="">Connexion</a></button>
-                <button class="bg-brand-red-dark text-white px-4 py-2 rounded"><a href="">Inscription</a></button>
+                <a href=""><button class="bg-brand-red-dark text-white px-4 py-2 rounded hover:bg-red-900 focus:outline-none">Connexion</button></a>
+                <a href=""><button class="bg-brand-red-dark text-white px-4 py-2 rounded hover:bg-red-900 focus:outline-none">Inscription</button></a>
                 {% else %}
                 <p class="mr-4">Bienvenue, {{ user.username }}</p>
-                <button class="bg-brand-red-dark text-white px-4 py-2 rounded"><a href="">Déconnexion</a></button>
+                <a href=""><button class="bg-brand-red-dark text-white px-4 py-2 rounded hover:bg-red-900 focus:outline-none">Déconnexion</button></a>
                 {% endif %}
             </section>
         </nav>
