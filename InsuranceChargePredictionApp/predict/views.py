@@ -5,18 +5,6 @@ from django.views.generic import FormView
 import joblib
 import pandas as pd
 from pathlib import Path
-import __main__
-
-
-
-def add_features(X):
-    X = X.copy()
-    X["smoker"] = X["smoker"].map({"yes": 1, "no": 0})
-    X["smoker_obese"] = X["smoker"] * (X["bmi"] >= 30).astype(int)
-    X["age"] = X["age"] ** 2
-    return X
-
-__main__.add_features = add_features
 
 class PredictionView(FormView):
     form_class = PredictionForm
@@ -42,13 +30,19 @@ class PredictionView(FormView):
             "region": [region]
         })
 
-        prediction_model_path = Path(__file__).parent / 'insurance_model.joblib'
+        prediction_model_path = Path(__file__).parent / 'utils' / 'insurance_model.joblib'
+        rmse_model_path = Path(__file__).parent / 'utils' / 'rmse.joblib'
+
         prediction_model = joblib.load(prediction_model_path)
         prediction = prediction_model.predict(new_data)[0]
+
+        rmse = joblib.load(rmse_model_path)
+        range = f"entre {round(prediction - rmse, 2)} € et {round(prediction + rmse, 2)} €"
 
         context = self.get_context_data()
         context['form'] = form
         context['prediction'] = round(prediction, 2)
+        context['range'] = range
 
         return render(self.request, self.template_name, context)
         

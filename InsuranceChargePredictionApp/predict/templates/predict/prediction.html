@@ -19,7 +19,10 @@
 
     {% if prediction %}
         <h3>Résultat de la prédiction</h3>
-        <p>Estimation des charges : {{ prediction }} €</p>
+        <p><strong>Estimation des charges : {{ prediction }} €</strong></p>
+        {% if range %}
+            <p>Fourchette : {{ range }}</p>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
