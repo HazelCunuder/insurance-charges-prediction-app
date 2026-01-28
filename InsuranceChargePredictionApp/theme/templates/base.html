@@ -2,48 +2,95 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
-    <title>{% block title %}Insurance App{% endblock %}</title>
+    <title>{% block title %}InsureAI{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% tailwind_css %}
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen selection:bg-[var(--color-brand-blue)] selection:text-white">
-    
-    <!-- Simple Navbar -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <a href="/" class="text-xl font-black tracking-tighter text-[var(--color-brand-blue)] flex items-center gap-2">
-            <span class="p-1.5 bg-[var(--color-brand-blue)] text-white rounded-lg">🛡️</span>
-            InsureAI
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col selection:bg-[var(--color-brand-blue)] selection:text-white">
+
+    {% now "U" as timestamp %}  {# timestamp pour forcer le rafraîchissement du logo #}
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-6 py-5 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3 group transition-all duration-300">
+            <div class="h-12 w-12 rounded-xl bg-[var(--color-brand-blue)] p-1.5 shadow-lg shadow-blue-500/30 ring-4 ring-blue-500/10 
+                        group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-500/40 
+                        transition-all duration-300 flex items-center justify-center overflow-hidden">
+                <img src="{% static 'images/logo.png' %}?v={{ timestamp }}" alt="InsureAI Logo" class="h-full w-full object-contain drop-shadow-md">
+            </div>
+            <span class="text-2xl font-black tracking-tight text-[var(--color-brand-blue)] 
+                         group-hover:text-blue-700 transition-colors duration-300">
+                InsureAI
+            </span>
         </a>
-        <div class="flex items-center gap-6">
+
+        <div class="flex items-center gap-8">
             {% if user.is_authenticated %}
-                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Bonjour, {{ user.first_name }}</span>
-                <a href="{% url 'user:profile' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">Profil</a>
-                <a href="{% url 'user:logout' %}" class="btn btn-ghost btn-sm text-red-500 font-bold">Déconnexion</a>
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                    Bonjour, {{ user.first_name|default:user.username }}
+                </span>
+                <a href="{% url 'user:profile' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
+                    Profil
+                </a>
+                <a href="{% url 'user:logout' %}" class="text-sm font-bold text-red-500 hover:text-red-600 transition-colors">
+                    Déconnexion
+                </a>
             {% else %}
-                <a href="{% url 'user:login' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">Connexion</a>
-                <a href="{% url 'user:signup' %}" class="btn btn-sm bg-[var(--color-brand-blue)] text-white border-none shadow-lg shadow-blue-500/20 hover:scale-105 transition-transform">S'inscrire</a>
+                <a href="{% url 'user:login' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
+                    Connexion
+                </a>
+                <a href="{% url 'user:signup' %}" class="btn btn-sm bg-[var(--color-brand-blue)] text-white border-none shadow-lg hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 font-bold">
+                    S'inscrire
+                </a>
             {% endif %}
         </div>
     </nav>
 
     {% block body_content %}
-    <div class="container mx-auto px-4 py-12">
+    <main class="container mx-auto px-4 py-12 mt-8 flex-grow">
         {% if messages %}
-            <div class="space-y-4 mb-8 max-w-lg mx-auto">
+            <div class="space-y-4 mb-10 max-w-2xl mx-auto">
                 {% for message in messages %}
-                    <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} bg-white border border-gray-100 shadow-xl shadow-gray-200/50 rounded-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
-                        <span class="text-sm font-medium">{{ message }}</span>
+                    <div class="alert {% if message.tags == 'error' %}alert-error bg-red-50 border-red-200{% else %}alert-success bg-emerald-50 border-emerald-200{% endif %} 
+                                 shadow-xl rounded-2xl p-5 flex items-center gap-4 animate-in fade-in slide-in-from-top-8 duration-500">
+                        <div class="text-lg">
+                            {% if message.tags == 'error' %}✖{% else %}✔{% endif %}
+                        </div>
+                        <span class="font-medium text-gray-800">{{ message }}</span>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
 
-        {% block content %}
-        {% endblock %}
-    </div>
+        {% block content %}{% endblock %}
+    </main>
     {% endblock %}
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+
+                <div class="flex items-center gap-2 opacity-80">
+                    <img src="{% static 'images/logo.png' %}?v={{ timestamp }}" alt="Logo Footer" class="h-6 w-auto grayscale">
+                    <span class="font-bold text-gray-700">InsuranceAI</span>
+                </div>
+
+                <div class="text-sm text-gray-500">
+                    &copy; {% now "Y" %} InsuranceAI. Tous droits réservés.
+                </div>
+
+                <div class="flex gap-6 text-sm font-medium text-gray-500">
+                    <a href="#" class="hover:text-[var(--color-brand-blue)] transition-colors">Mentions légales</a>
+                    <a href="#" class="hover:text-[var(--color-brand-blue)] transition-colors">Confidentialité</a>
+                    <a href="#" class="hover:text-[var(--color-brand-blue)] transition-colors">Contact</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>

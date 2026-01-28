@@ -1,4 +1,4 @@
-@theme {
+:root {
     --color-brand-red-light: oklch(0.6118 0.2161 28.81);
     --color-brand-red-dark: oklch(0.5305 0.1988 24.64);
     --color-brand-blue: oklch(0.4526 0.1324 251.21);
