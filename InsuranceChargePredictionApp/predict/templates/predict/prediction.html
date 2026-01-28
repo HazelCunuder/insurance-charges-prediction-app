@@ -1,28 +1,57 @@
 {% extends 'base.html' %}
-
 {% block title %}Prédiction des charges d'assurance{% endblock %}
-
 {% block content %}
-    <h2>Prédiction des charges d'assurance</h2>
+<section class="min-h-screen bg-gray-50 py-12 px-4">
+    <div class="max-w-3xl mx-auto">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-bold text-gray-900 mb-2">
+                Prédiction de charges d'assurance
+            </h2>
+        </div>
 
-    <h3>Formulaire</h3>
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="fieldWrapper">
-                {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
+        <!-- Form Card -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in form %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-brand-blue hover:bg-blue-800 text-white font-semibold 
+                               py-3 px-6 rounded-lg transition-colors duration-200">
+                    Calculer la prédiction
+                </button>
+            </form>
+
+            <!-- Results -->
+            {% if prediction %}
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Résultat de la prédiction
+                    </h3>
+                    <p class="text-3xl font-bold text-green-600 mb-2">
+                        {{ prediction }} €
+                    </p>
+                    <p class="text-sm text-gray-600">Fourchette : {{ range }}</p>
+                </div>
             </div>
-        {% endfor %}
-        <button type="submit">Prédire</button>
-    </form>
-
-    {% if prediction %}
-        <h3>Résultat de la prédiction</h3>
-        <p><strong>Estimation des charges : {{ prediction }} €</strong></p>
-        {% if range %}
-            <p>Fourchette : {{ range }}</p>
-        {% endif %}
-    {% endif %}
-
+            {% endif %}
+        </div>
+    </div>
+</section>
 {% endblock %}
