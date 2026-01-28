@@ -1,12 +1,14 @@
 {% load static tailwind_tags %}
+
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
-    <title>{% block title %}Assur Aimant{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     {% tailwind_css %}
+
+    <title>{% block title %}Assur'Aimant{% endblock %}</title>
 </head>
 
 <body class="bg-gray-50 text-black font-serif min-h-screen flex flex-col selection:bg-[var(--color-brand-blue)] selection:text-white">
@@ -32,17 +34,17 @@
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
                     Bonjour, {{ user.first_name|default:user.username }}
                 </span>
-                <a href="{% url 'user:profile' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
+                <a href="{% url 'accounts:profile' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
                     Profil
                 </a>
-                <a href="{% url 'user:logout' %}" class="text-sm font-bold text-red-500 hover:text-red-600 transition-colors">
+                <a href="{% url 'accounts:logout' %}" class="text-sm font-bold text-red-500 hover:text-red-600 transition-colors">
                     Déconnexion
                 </a>
             {% else %}
-                <a href="{% url 'user:login' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
+                <a href="{% url 'accounts:login' %}" class="text-sm font-semibold hover:text-[var(--color-brand-blue)] transition-colors">
                     Connexion
                 </a>
-                <a href="{% url 'user:signup' %}" class="btn btn-sm bg-[var(--color-brand-blue)] text-white border-none shadow-lg hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 font-bold">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-sm bg-[var(--color-brand-blue)] text-white border-none shadow-lg hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 font-bold">
                     S'inscrire
                 </a>
             {% endif %}
