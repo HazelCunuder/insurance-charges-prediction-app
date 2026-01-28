@@ -3,11 +3,9 @@
         <h1 class="text-2xl font-bold">Assur'Aimant</h1>
         <nav class="flex space-x-6 items-center">
             <ul class="flex space-x-4">
-                <li><a href="{% url 'home' %}" class="hover:underline">Accueil</a></li>
-                {% if perms.advisor.make_prediction %}
-                <li><a href="{% url 'prediction' %}" class="hover:underline">Prédiction</a></li>
-                {% endif %}
+                <li><a href="{% url 'home' %}" class="hover:underline">Accueil</a></li>   
                 {% if user.is_authenticated %}
+                <li><a href="{% url 'prediction' %}" class="hover:underline">Prédiction</a></li>
                 <li><a href="{% url 'accounts:profile'%}" class="hover:underline">Profil</a></li>
                 {% endif %}
             </ul>
