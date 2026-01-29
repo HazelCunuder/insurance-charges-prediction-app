@@ -23,6 +23,12 @@ class PredictionView(FormView):
             try:
                 user = User.objects.get(id=selected_user_id)
 
+                if hasattr(user, 'first_name') and user.first_name:
+                    initial['first_name'] = user.first_name
+
+                if hasattr(user, 'last_name') and user.last_name:
+                    initial['last_name'] = user.last_name
+
                 if hasattr(user, 'age') and user.age:
                     initial['age'] = user.age
 

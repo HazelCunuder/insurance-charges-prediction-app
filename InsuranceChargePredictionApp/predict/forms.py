@@ -5,6 +5,9 @@ class PredictionForm(forms.Form):
     SMOKER_CHOICES = [('yes', 'Oui'), ('no', 'Non')]
     REGION_CHOICES = [('northeast', 'Nord-Est'), ('northwest', 'Nord-Ouest'), ('southeast', 'Sud-Est'), ('southwest', 'Sud-Ouest')]
 
+    first_name = forms.CharField(label="Prénom", max_length=50)
+    last_name = forms.CharField(label='Nom de famille', max_length=50)
+
     age = forms.IntegerField(label='Âge :', min_value=18, max_value=125, required=True)
     gender = forms.ChoiceField(label='Genre :', choices=GENDER_CHOICES, required=True)
 
