@@ -29,6 +29,9 @@ class PredictionView(FormView):
                 if hasattr(user, 'last_name') and user.last_name:
                     initial['last_name'] = user.last_name
 
+                if hasattr(user, 'email') and user.email:
+                    initial['email'] = user.email
+
                 if hasattr(user, 'age') and user.age:
                     initial['age'] = user.age
 
