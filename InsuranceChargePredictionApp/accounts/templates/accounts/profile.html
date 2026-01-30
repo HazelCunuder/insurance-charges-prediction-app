@@ -51,7 +51,7 @@
                             <span class="text-sm font-black text-gray-900">{{ user.bmi|default:"--" }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-bold text-gray-500">Fumeur</span>
+                            <span class="text-sm font-bold text-gray-500">{% if user.gender == "female"%}Fumeuse{% else %}Fumeur{%endif%}</span>
                             <span class="text-sm font-black {% if user.smoker %}text-red-500{% else %}text-green-500{% endif %}">
                                 {{ user.smoker|yesno:"Oui,Non" }}
                             </span>
