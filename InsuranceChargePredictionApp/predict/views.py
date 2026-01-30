@@ -2,9 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from .forms import PredictionForm
 from django.views.generic import FormView
-import joblib
 import pandas as pd
-from pathlib import Path
+from .utils.service import prediction_model, rmse
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -63,7 +62,7 @@ class PredictionView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.all()
+        context['users'] = User.objects.filter(role='Client')
         context['selected_user_id'] = self.request.GET.get('user_id', '')
         return context
 
@@ -87,19 +86,16 @@ class PredictionView(FormView):
             "region": [region]
         })
 
-        prediction_model_path = Path(__file__).parent / 'utils' / 'insurance_model.joblib'
-        rmse_model_path = Path(__file__).parent / 'utils' / 'rmse.joblib'
-
-        prediction_model = joblib.load(prediction_model_path)
         prediction = prediction_model.predict(new_data)[0]
 
-        rmse = joblib.load(rmse_model_path)
-        range = f"entre {max(1000, round(prediction - rmse, 2))} € et {round(prediction + rmse, 2)} €"
+        range_lower = max(1000, round(prediction - rmse, 2))
+        range_upper = round(prediction + rmse, 2)
 
         context = self.get_context_data()
         context['form'] = form
         context['prediction'] = round(prediction, 2)
-        context['range'] = range
+        context['range_lower'] = range_lower
+        context['range_upper'] = range_upper
 
         return render(self.request, self.template_name, context)
         
