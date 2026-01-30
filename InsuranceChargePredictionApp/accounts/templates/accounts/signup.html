@@ -59,18 +59,29 @@
                     <div class="form-control">
                         <label class="label"><span class="label-text font-bold text-gray-700">{{ form.password1.label }}</span></label>
                         {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.password1.errors|striptags }}</span></label>
-                        {% endif %}
                     </div>
+
                     <div class="form-control">
                         <label class="label"><span class="label-text font-bold text-gray-700">Confirmation</span></label>
                         {{ form.password2 }}
-                        {% if form.password2.errors %}
-                            <label class="label"><span class="label-text-alt text-error font-semibold">{{ form.password2.errors|striptags }}</span></label>
-                        {% endif %}
                     </div>
                 </div>
+
+                {% if form.password1.errors or form.password2.errors or form.non_field_errors %}
+                    <div class="label-text-alt text-error font-semibold">
+                        {% if form.password1.errors %}
+                            <p>{{ form.password1.errors|striptags }}</p>
+                        {% endif %}
+
+                        {% if form.password2.errors %}
+                            <p>{{ form.password2.errors|striptags }}</p>
+                        {% endif %}
+
+                        {% if form.non_field_errors %}
+                            <p>{{ form.non_field_errors }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
 
                 <button type="submit"
                         class="btn btn-block bg-brand-blue hover:bg-brand-red-dark border-none text-white font-black text-lg h-14 rounded-2xl shadow-2xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.01] mt-6">
