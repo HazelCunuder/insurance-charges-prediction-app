@@ -12,11 +12,12 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-
-            <div>
+        
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-gray-900">Sélectionner un client existant</h3>
                 <label>Sélectionner un client :</label>
-                <select id="user-select" onchange="loadUserData(this.value)">
+                <select id="user-select" onchange="loadUserData(this.value)" class="block w-full border border-gray-300 rounded-md shadow-sm 
+                        px-3 focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm">
                     <option value="">- - - - - - - - - - - - - -</option>
                     {% for user in users %}
                         <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_user_id %}selected{% endif %}>
@@ -31,7 +32,9 @@
                     window.location.href = "?user_id=" + userId;
                 }
             </script>
-
+        <div class="bg-white rounded-lg shadow-lg p-8 flex flex-col">
+            <h3 class="text-2xl font-semibold text-gray-900 mb-6 self-center">Prédiction</h3>
+                
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 
