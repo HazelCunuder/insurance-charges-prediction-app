@@ -4,9 +4,7 @@
         <nav class="flex space-x-6 items-center">
             <ul class="flex space-x-4">
                 <li><a href="{% url 'home' %}" class="hover:underline">Accueil</a></li>   
-                {% if user.role == "Advisor" %}
                 <li><a href="{% url 'prediction' %}" class="hover:underline">Prédiction</a></li>
-                {% endif %}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'accounts:profile'%}" class="hover:underline">Profil</a></li>
                 {% endif %}

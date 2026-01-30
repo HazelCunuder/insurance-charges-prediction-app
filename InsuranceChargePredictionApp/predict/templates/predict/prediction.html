@@ -12,7 +12,7 @@
         </div>
 
         <!-- Form Card -->
-        
+        {% if is_advisor %}
             <div class="mb-6">
                 <h3 class="text-2xl font-semibold text-gray-900">Sélectionner un client existant</h3>
                 <select id="user-select" onchange="loadUserData(this.value)" class="block w-full border border-gray-300 rounded-md shadow-sm 
@@ -31,6 +31,8 @@
                     window.location.href = "?user_id=" + userId;
                 }
             </script>
+        {% endif %}
+            
         <div class="bg-white rounded-lg shadow-lg p-8 flex flex-col">
             <h3 class="text-2xl font-semibold text-gray-900 mb-6 self-center">Prédiction</h3>
                 
