@@ -13,6 +13,25 @@
 
         <!-- Form Card -->
         <div class="bg-white rounded-lg shadow-lg p-8">
+
+            <div>
+                <label>Sélectionner un client :</label>
+                <select id="user-select" onchange="loadUserData(this.value)">
+                    <option value="">- - - - - - - - - - - - - -</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_user_id %}selected{% endif %}>
+                            {{ user.last_name }} {{ user.first_name }} ({{ user.id }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <script>
+                function loadUserData(userId) {
+                    window.location.href = "?user_id=" + userId;
+                }
+            </script>
+
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 
