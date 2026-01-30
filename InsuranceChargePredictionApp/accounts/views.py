@@ -1,4 +1,3 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,7 @@ from .models import CustomUser
 class LoginView(FormView):
     template_name = "accounts/login.html"
     form_class = CustomAuthenticationForm
-    success_url = reverse_lazy("home")  # Redirige vers l'accueil par défaut
+    success_url = reverse_lazy("home") # Redirige vers l'accueil par défaut
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -45,10 +44,7 @@ class SignupView(FormView):
         user = form.save(commit=False)
         user.role = form.cleaned_data["role"]
         user.save()
-        messages.success(
-            self.request,
-            "Compte créé avec succès ! Vous pouvez maintenant vous connecter.",
-        )
+        messages.success(self.request,"Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -77,7 +73,4 @@ def profile(request):
             messages.error(request, "Erreur lors de la mise à jour.")
     else:
         form = UserProfileForm(instance=request.user)
-
-    return render(
-        request, "accounts/profile.html", {"user": request.user, "form": form}
-    )
+        return render(request, "accounts/profile.html", {"user": request.user, "form": form})
