@@ -93,7 +93,7 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = _("utilisateur")
         verbose_name_plural = _("utilisateurs")
-        db_table = "user_customuser"
+        db_table = "accounts_customuser"
 
     def __str__(self):
         return f"{self.get_full_name()} ({self.email})"
@@ -103,64 +103,3 @@ class CustomUser(AbstractUser):
 
     def get_short_name(self):
         return self.first_name
-
-
-class UserPrediction(models.Model):  # Correction de la faute de frappe "Predictiction"
-    """
-    Modèle pour les prédictions d'assurance liées à un utilisateur.
-    Remplace l'ancien UserPredictiction avec calculs sécurisés.
-    """
-
-    GENDER_CHOICES = [("female", _("Femme")), ("male", _("Homme"))]
-    SMOKER_CHOICES = [("yes", _("Oui")), ("no", _("Non"))]
-    REGION_CHOICES = [
-        ("northeast", _("Nord-Est")),
-        ("northwest", _("Nord-Ouest")),
-        ("southeast", _("Sud-Est")),
-        ("southwest", _("Sud-Ouest")),
-    ]
-
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name="predictions",
-        verbose_name=_("utilisateur"),
-    )
-    user_age = models.PositiveIntegerField(_("âge"))
-    user_gender = models.CharField(
-        max_length=6, choices=GENDER_CHOICES, verbose_name=_("genre")
-    )
-    user_height = models.FloatField(_("taille (en m)"))
-    user_weight = models.FloatField(_("poids (en kg)"))
-    user_smoker = models.CharField(
-        max_length=3, choices=SMOKER_CHOICES, verbose_name=_("fumeur ?")
-    )
-    user_children = models.PositiveIntegerField(_("nombre d'enfants"))
-    user_region = models.CharField(
-        max_length=9, choices=REGION_CHOICES, verbose_name=_("région de résidence")
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("date de création")
-    )
-
-    class Meta:
-        verbose_name = _("prédiction")
-        verbose_name_plural = _("prédictions")
-        db_table = "user_prediction"
-        ordering = ["-created_at"]
-
-    @property
-    def bmi(self):
-        """Calcule l'IMC en évitant les divisions par zéro"""
-        if self.user_height and self.user_height > 0:
-            return round(self.user_weight / (self.user_height**2), 1)
-        return None
-
-    def __str__(self):
-        gender_str = _("femme") if self.user_gender == "female" else _("homme")
-        smoker_str = _("fumeur") if self.user_smoker == "yes" else _("non-fumeur")
-        bmi_str = f"IMC {self.bmi}" if self.bmi else _("IMC indisponible")
-        return (
-            f"Prédiction #{self.id} - {gender_str}, {self.user_age} ans, "
-            f"{smoker_str}, {bmi_str}, {self.user_children} enfant(s)"
-        )
