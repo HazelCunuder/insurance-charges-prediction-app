@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', "127.0.0.1,localhost,0.0.0.0").split(',')
 
 # CONFIGURATION AUTHENTIFICATION CRITIQUE (AJOUTÉ)
 AUTH_USER_MODEL = "accounts.CustomUser"  # DOIT ÊTRE DÉFINI AVANT TOUTE MIGRATION
@@ -63,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Nécessaire pour l'auth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 if DEBUG:
@@ -119,13 +121,19 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
- 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Tailwind configuration
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "/usr/bin/npm"
 
+STORAGES = {
+        "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        }
+}
