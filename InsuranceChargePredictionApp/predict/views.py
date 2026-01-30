@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .forms import PredictionForm
 from django.views.generic import FormView
 import pandas as pd
-from .utils.service import prediction_model, rmse
+from .services import predict_charges
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -92,19 +92,7 @@ class PredictionView(FormView):
         height = form.cleaned_data.get('height')
         bmi = weight / (height ** 2)
 
-        new_data = pd.DataFrame({
-            "age": [age],
-            "children": [children],
-            "smoker": [smoker],
-            "bmi": [bmi],
-            "sex": [gender],
-            "region": [region]
-        })
-
-        prediction = prediction_model.predict(new_data)[0]
-
-        range_lower = max(1000, round(prediction - rmse, 2))
-        range_upper = round(prediction + rmse, 2)
+        prediction, range_lower, range_upper = predict_charges(age, children, smoker, bmi, gender, region)
 
         context = self.get_context_data()
         context['form'] = form
