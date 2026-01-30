@@ -46,6 +46,12 @@
                     {% endif %}
                 </div>
 
+                {% if form.non_field_errors %}
+                    <div class="label-text-alt text-error font-semibold">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
                 <button type="submit"
                         class="btn btn-block bg-brand-blue hover:bg-brand-red-dark border-none text-white font-black text-lg h-14 rounded-2xl shadow-2xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-95 group">
                     Se connecter
