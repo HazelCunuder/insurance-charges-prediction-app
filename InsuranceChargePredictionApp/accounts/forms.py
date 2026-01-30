@@ -143,7 +143,7 @@ class UserProfileForm(forms.ModelForm):
                     "step": "0.1",
                 }
             ),
-            "smoker": forms.CheckboxInput(attrs={"class": "checkbox checkbox-primary"}),
+            "smoker": forms.CheckboxInput(attrs={"class": "checkbox-primary"}),
             "children": forms.NumberInput(
                 attrs={"class": "input input-bordered w-full bg-white/50"}
             ),
