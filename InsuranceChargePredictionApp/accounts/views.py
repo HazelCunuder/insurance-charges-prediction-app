@@ -1,22 +1,20 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views.generic import FormView, RedirectView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomAuthenticationForm, CustomUserCreationForm, UserProfileForm
-from .models import CustomUser
 
 
 class LoginView(FormView):
     template_name = "accounts/login.html"
     form_class = CustomAuthenticationForm
-    success_url = reverse_lazy("home") # Redirige vers l'accueil par défaut
+    success_url = reverse_lazy("accounts:profile")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("home")
+            return redirect("accounts:profile")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -26,7 +24,7 @@ class LoginView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "Email ou mot de passe incorrect.")
+        messages.error(self.request, "Les identifiants sont incorrects.")
         return super().form_invalid(form)
 
 
@@ -37,7 +35,7 @@ class SignupView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("home")
+            return redirect("accounts:profile")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -48,7 +46,7 @@ class SignupView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "Corrigez les erreurs ci-dessous.")
+        messages.error(self.request, "Veuillez compléter le formulaire d'inscription.")
         return super().form_invalid(form)
 
 
