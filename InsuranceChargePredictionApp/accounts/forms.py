@@ -10,6 +10,10 @@ class CustomAuthenticationForm(AuthenticationForm):
 
     username = forms.EmailField(
         label="Adresse email",
+        error_messages={
+            'required': 'Veuillez renseigner votre adresse email.',
+            'invalid': 'Veuillez renseigner une adresse email valide.'
+        },
         widget=forms.EmailInput(
             attrs={
                 "class": "input input-bordered w-full bg-white/50 backdrop-blur-sm transition-all focus:input-primary",
@@ -18,8 +22,12 @@ class CustomAuthenticationForm(AuthenticationForm):
             }
         ),
     )
+
     password = forms.CharField(
         label="Mot de passe",
+        error_messages={
+            'required': 'Veuillez saisir votre mot de passe.'
+        },
         widget=forms.PasswordInput(
             attrs={
                 "class": "input input-bordered w-full bg-white/50 backdrop-blur-sm transition-all focus:input-primary",
@@ -33,13 +41,19 @@ class CustomUserCreationForm(UserCreationForm):
     """Formulaire d'inscription complet avec rôle et validation email"""
 
     ROLE_CHOICES = [
-        ("Client", "Client - Obtenir des prédictions d'assurance"),
-        ("Advisor", "Conseiller - Gérer les prédictions clients"),
+        ("Client", "Client - Accéder à votre profil"),
+        ("Advisor", "Conseiller - Gérer les prédictions des clients"),
     ]
 
     first_name = forms.CharField(
         label="Prénom",
+        min_length=2,
         max_length=50,
+        error_messages={
+            'required': 'Veuillez renseigner un prénom.',
+            'min_length': 'Le prénom doit comporter au moins 2 caractères.',
+            'max_length': 'Le prénom ne peut pas contenir plus de 50 caractères.'
+            },
         widget=forms.TextInput(
             attrs={
                 "class": "input input-bordered w-full bg-white/50 backdrop-blur-sm transition-all focus:input-primary",
@@ -47,9 +61,16 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
     )
+
     last_name = forms.CharField(
         label="Nom",
-        max_length=30,
+        min_length=2,
+        max_length=50,
+        error_messages={
+            'required': 'Veuillez renseigner un nom de famille.',
+            'min_length': 'Le nom doit comporter au moins 2 caractères.',
+            'max_length': 'Le nom ne peut pas contenir plus de 50 caractères.'
+        },
         widget=forms.TextInput(
             attrs={
                 "class": "input input-bordered w-full bg-white/50 backdrop-blur-sm transition-all focus:input-primary",
@@ -57,8 +78,13 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
     )
+    
     email = forms.EmailField(
         label="Adresse email",
+        error_messages={
+            'required': 'Veuillez renseigner votre adresse email.',
+            'invalid': 'Veuillez renseigner une adresse email valide.'
+        },
         widget=forms.EmailInput(
             attrs={
                 "class": "input input-bordered w-full bg-white/50 backdrop-blur-sm transition-all focus:input-primary",
@@ -66,11 +92,15 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
     )
+
     role = forms.ChoiceField(
         label="Type de compte",
         choices=ROLE_CHOICES,
+        error_messages={
+            'required': 'Veuillez sélectionner un type de compte.',
+            'invalid_choice': 'Ce choix n\'est pas valide.'
+        },
         widget=forms.RadioSelect(attrs={"class": "space-y-2"}),
-        required=True,
     )
 
     class Meta(UserCreationForm.Meta):
@@ -93,12 +123,12 @@ class CustomUserCreationForm(UserCreationForm):
                 "placeholder": "••••••••",
             }
         )
-        self.fields["password2"].label = "Confirmation du mot de passe"
+        self.fields["password2"].label = "Confirmez votre mot de passe"
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Cet email est déjà utilisé.")
+            raise forms.ValidationError("Cette adresse email est invalide.")
         return email
 
 
