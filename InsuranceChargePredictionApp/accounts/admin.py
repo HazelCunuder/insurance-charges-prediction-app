@@ -1,8 +1,7 @@
-# user/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import CustomUser, UserPrediction
+from .models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
@@ -32,15 +31,3 @@ class CustomUserAdmin(BaseUserAdmin):
     
     # Utiliser email comme champ principal
     readonly_fields = ('last_login', 'date_joined')
-
-@admin.register(UserPrediction)
-class UserPredictionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'user_age', 'bmi', 'user_smoker', 'created_at')
-    list_filter = ('user_smoker', 'user_gender', 'user_region')
-    search_fields = ('user__email', 'user__first_name', 'user__last_name')
-    readonly_fields = ('created_at', 'bmi')
-    ordering = ('-created_at',)
-    
-    def bmi(self, obj):
-        return obj.bmi
-    bmi.short_description = 'IMC'

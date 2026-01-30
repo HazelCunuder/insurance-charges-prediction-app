@@ -100,7 +100,7 @@ class CustomUserCreationForm(UserCreationForm):
             'required': 'Veuillez sélectionner un type de compte.',
             'invalid_choice': 'Ce choix n\'est pas valide.'
         },
-        widget=forms.RadioSelect(attrs={"class": "space-y-2"}),
+        widget=forms.RadioSelect(attrs={"class": "space-y-2, space-y-2 flex flex-col"}),
     )
 
     class Meta(UserCreationForm.Meta):

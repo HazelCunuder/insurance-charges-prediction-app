@@ -34,7 +34,7 @@ LOGOUT_REDIRECT_URL = "accounts:login"
 
 # Application definition
 INSTALLED_APPS = [
-    # Our Apps (ORDRE IMPORTANT : accounts en premier pour le modèle personnalisé)
+    # Our Apps
     'accounts',
     'predict',
     'appointment',
