@@ -304,7 +304,7 @@ class CustomUserModelTest(TestCase):
             last_name="  Martin  ",
             role="Client"
         )
-        self.assertEqual(user2.get_full_name(), "Marie   Martin")
+        self.assertEqual(user2.get_full_name(), "Marie Martin")
 
     def test_str_method(self):
         """Test de la méthode __str__"""
