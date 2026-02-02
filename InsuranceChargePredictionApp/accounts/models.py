@@ -99,7 +99,7 @@ class CustomUser(AbstractUser):
         return f"{self.get_full_name()} ({self.email})"
 
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}".strip()
+        return f"{self.first_name.strip()} {self.last_name.strip()}"
 
     def get_short_name(self):
         return self.first_name
