@@ -320,12 +320,3 @@ class PredictChargesTest(TestCase):
         self.assertEqual(prediction, 3658.90)
         self.assertIsNone(range_lower)
         self.assertIsNone(range_upper)
-
-
-
-""" Formulaire : validation et redirection
-- Formulaire incomplet : erreur
-- Formulaire avec données invalides : erreur
-- Tester les différentes valeurs invalides possibles
-- Formulaire complet et valide : redirection vers /prediction avec affichage de prédiction et champs conservés
-"""
