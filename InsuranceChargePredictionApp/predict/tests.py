@@ -2,6 +2,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .forms import PredictionForm
+from .services import predict_charges
+from unittest.mock import patch
 
 User = get_user_model()
 
@@ -103,7 +105,20 @@ class PredictionViewTest(TestCase):
         self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
         response = self.client.get(reverse('prediction'))
         self.assertEqual(response.context['is_advisor'], True)
-    
+
+    def test_prediction_view_only_advisors_see_clients_list(self):
+        response = self.client.get(reverse('prediction'))
+        self.assertNotIn('users', response.context)
+
+        self.client.login(email='marie.dupont@gmail.com', password='Marie_Dupont_123')
+        response = self.client.get(reverse('prediction'))
+        self.assertNotIn('users', response.context)
+        self.client.logout()
+
+        self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
+        response = self.client.get(reverse('prediction'))
+        self.assertIn('users', response.context)
+
     def test_prediction_view_advisor_has_correct_clients_list(self):
         self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
         response = self.client.get(reverse('prediction'))
@@ -111,9 +126,6 @@ class PredictionViewTest(TestCase):
         context_users = response.context['users'].order_by('pk')
         expected_users = User.objects.filter(role='Client').order_by('pk')
         self.assertQuerySetEqual(context_users, expected_users)
-
-    def test_prediction_view_selected_client_returns_correct_infos(self):
-        self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
 
     def test_prediction_view_advisor_form_empty_if_invalid_user_id(self):
         self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
@@ -123,34 +135,87 @@ class PredictionViewTest(TestCase):
         self.assertFalse(response.context['form'].is_bound)
         self.assertEqual(response.context['form'].initial, {})
 
-        
+    def test_prediction_view_selected_client_id_is_correct(self):
+        self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
+        target_user_id = self.user_client.id
+        response = self.client.get(reverse('prediction') + f'?user_id={target_user_id}')
+        self.assertEqual(int(response.context['selected_user_id']), target_user_id)
+
+    def test_prediction_view_selected_client_returns_correct_infos(self):
+        self.client.login(email='advisor@test.fr', password='Test_Advisor_159')
+        target_user_id = self.user_client2.id
+        response = self.client.get(reverse('prediction') + f'?user_id={target_user_id}')
+
+        initial_data = response.context['form'].initial
+        self.assertEqual(initial_data.get('weight'), None)
+        self.assertNotContains(response, 'name="weight" value="')
+
+        self.assertEqual(initial_data.get('email'), "jbernard@hotmail.fr")
+        self.assertContains(response, 'name="email" value="jbernard@hotmail.fr"')
+
+
+    # Tests validation du formulaire
 
 
 
+    # Test prédiction
 
-    
-    def test_client_sees_prefilled_form(self):
-        self.client.login(email='marie.dupont@gmail.com', password='Marie_Dupont_123')
-        response = self.client.get(reverse('prediction'))
-        self.assertContains(response, 'value="Marie"')
-        self.assertContains(response, 'value="Dupont"')
-        self.assertContains(response, 'value="19"')
-        self.assertContains(response, 'value="female" selected')
-        self.assertContains(response, 'value="yes" selected')
-        self.assertContains(response, 'value="southwest" selected')
-        self.assertContains(response, 'value="0"')
-        self.assertContains(response, 'value="65.8"')
-        self.assertContains(response, 'value="1.75"')
-    
+    @patch('predict.views.predict_charges')
+    def test_prediction_view_form_validation_calls_predict_charges(self, mock_predict):
+        mock_predict.return_value = (3000.50, 1000, 7000.50)
+        data = {
+            'first_name': 'Alice',
+            'last_name': 'Marchand',
+            'email': 'alice.marchand@gmail.com',
+            'age': 20,
+            'gender': 'male',
+            'smoker': 'no',
+            'weight': 78.5,
+            'height': 1.78,
+            'children': 2,
+            'region': 'southeast',
+            }
+        response = self.client.post(reverse('prediction'), data=data)
+
+        mock_predict.assert_called_once_with(20, 'male', 'no', 78.5, 1.78, 2, 'southeast')
+        self.assertEqual(response.context['prediction'], 3000.50)
+        self.assertEqual(response.context['range_lower'], 1000)
+        self.assertEqual(response.context['range_upper'], 7000.50)
 
 
+class PredictChargesTest(TestCase):
+    def test_predict_charges_output_format(self):
+        prediction, range_lower, range_upper = predict_charges(
+            age=20, 
+            gender='female', 
+            smoker='yes', 
+            weight=70, 
+            height=1.8, 
+            children=2, 
+            region='southeast'
+        )
+
+        self.assertIsInstance(prediction, float)
+        self.assertIsInstance(range_lower, float)
+        self.assertIsInstance(range_upper, float)
 
 
+""" Formulaire : validation et redirection
+- Formulaire incomplet : erreur
+- Formulaire avec données invalides : erreur
+- Tester les différentes valeurs invalides possibles
+- Formulaire complet et valide : redirection vers /prediction avec affichage de prédiction et champs conservés
+"""
 
+""" Prédiction
+X Appel de la fonction dans services.py
+- Affichage d'erreur si modèle absent
+- Prédiction, range_lower et range_upper : nombres float positifs
+- range_lower : minimum 1000
+- range_lower < prediction < range_upper
+- BMI calculé correctement (weight / height ** 2)
+"""
 
-
-
-# Tests PredictionView
 
 """ Appel de modèles et templates :
 X Utilise le template prediction.html
@@ -168,31 +233,14 @@ X is_advisor est False si client non connecté
 X is_advisor est False si client connecté
 X is_advisor est True si conseiller connecté
 X la liste de clients contient uniquement des user de rôle client
-- le selected_user_id correspond bien à l'user_id du client sélectionné
 """
 
 """ Authentification et autorisations
-X Client non connecté : formulaire vide, pas de liste de clients
-- Client connecté : formulaire pré-rempli avec les bonnes infos, pas de liste clients
-- Conseiller connecté : formulaire vide, liste de clients
-- Sélection de client : pré-remplit les champs avec les bonnes infos
-- Infos client manquantes : champ vide
-"""
-
-""" Formulaire : validation et redirection
-- Formulaire incomplet : erreur
-- Formulaire avec données invalides : erreur
-- Tester les différentes valeurs invalides possibles
-- Formulaire complet et valide : redirection vers /prediction avec affichage de prédiction et champs conservés
-"""
-
-""" Prédiction
-- Appel de la fonction dans services.py
-- Affichage d'erreur si modèle absent
-- Prédiction, range_lower et range_upper : nombres float positifs
-- range_lower : minimum 1000
-- range_lower < prediction < range_upper
-- BMI calculé correctement (weight / height ** 2)
+X Liste de clients non visible si utilisateur non connecté ou client connecté
+X Conseiller connecté : formulaire vide, liste de clients
+X Le selected_user_id correspond bien à l'user_id du client sélectionné
+X Sélection de client : pré-remplit les champs avec les bonnes infos
+X Infos client manquantes : champ vide
 """
 
 

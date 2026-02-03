@@ -2,7 +2,6 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from .forms import PredictionForm
 from django.views.generic import FormView
-import pandas as pd
 from .services import predict_charges
 from django.contrib.auth import get_user_model
 
@@ -63,7 +62,10 @@ class PredictionView(FormView):
             initial['region'] = user.region
 
         if hasattr(user, 'smoker') and user.smoker is not None:
-            initial['smoker'] = 'yes' if user.smoker else 'no'
+            if user.smoker == 'yes':
+                initial['smoker'] = 'yes'
+            elif user.smoker == 'no':
+                initial['smoker'] = 'no'
 
         return initial
     
@@ -86,13 +88,12 @@ class PredictionView(FormView):
         age = form.cleaned_data.get('age')
         gender = form.cleaned_data.get('gender')
         smoker = form.cleaned_data.get('smoker')
-        region = form.cleaned_data.get('region')
-        children = form.cleaned_data.get('children')
         weight = form.cleaned_data.get('weight')
         height = form.cleaned_data.get('height')
-        bmi = weight / (height ** 2)
+        children = form.cleaned_data.get('children')
+        region = form.cleaned_data.get('region')
 
-        prediction, range_lower, range_upper = predict_charges(age, children, smoker, bmi, gender, region)
+        prediction, range_lower, range_upper = predict_charges(age, gender, smoker, weight, height, children, region)
 
         context = self.get_context_data()
         context['form'] = form
