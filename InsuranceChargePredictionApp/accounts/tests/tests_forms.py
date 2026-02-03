@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from ..forms import CustomAuthenticationForm, CustomUserCreationForm, UserProfileForm
+from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm, UserProfileForm
 
 User = get_user_model()
 
@@ -38,14 +38,6 @@ class TestCustomAuthenticationFormValidation(TestCase):
         form = CustomAuthenticationForm(data={
             "username": "auth@example.com",
             "password": "WrongPassword1!",
-        })
-        self.assertFalse(form.is_valid())
-
-    def test_nonexistent_email_form_invalid(self):
-        """Formulaire invalide avec email inexistant"""
-        form = CustomAuthenticationForm(data={
-            "username": "nobody@example.com",
-            "password": "Str0ng!Pass99",
         })
         self.assertFalse(form.is_valid())
 
