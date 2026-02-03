@@ -134,7 +134,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 class UserProfileForm(forms.ModelForm):
     """Formulaire de mise à jour du profil et des caractéristiques d'assurance"""
-
+    
     class Meta:
         model = User
         fields = (
@@ -156,7 +156,10 @@ class UserProfileForm(forms.ModelForm):
                 attrs={"class": "input input-bordered w-full bg-white/50"}
             ),
             "age": forms.NumberInput(
-                attrs={"class": "input input-bordered w-full bg-white/50"}
+                attrs={
+                    "class": "input input-bordered w-full bg-white/50",
+                    "min" : 18
+                }
             ),
             "gender": forms.Select(
                 attrs={"class": "select select-bordered w-full bg-white/50"}
@@ -165,17 +168,22 @@ class UserProfileForm(forms.ModelForm):
                 attrs={
                     "class": "input input-bordered w-full bg-white/50",
                     "step": "0.01",
+                    "min": 1
                 }
             ),
             "weight": forms.NumberInput(
                 attrs={
                     "class": "input input-bordered w-full bg-white/50",
                     "step": "0.1",
+                    "min" : 30
                 }
             ),
             "smoker": forms.CheckboxInput(attrs={"class": "checkbox-primary"}),
             "children": forms.NumberInput(
-                attrs={"class": "input input-bordered w-full bg-white/50"}
+                attrs={
+                    "class": "input input-bordered w-full bg-white/50",
+                    "min" : 0
+                }
             ),
             "region": forms.Select(
                 attrs={"class": "select select-bordered w-full bg-white/50"}
