@@ -104,6 +104,10 @@ class PredictionView(FormView):
             if range_lower and range_upper:
                 context['range_lower'] = range_lower
                 context['range_upper'] = range_upper
+
+        except ValueError:
+            form.add_error(None, 'Les données renseignées pour le poids et/ou la taille semblent incorrectes.')
+            return self.form_invalid(form)
         
         except ModelNotFoundError:
             form.add_error(None, 'Toutes nos excuses, le service de prédiction est momentanément indisponible.')
@@ -138,7 +142,6 @@ class PredictionView(FormView):
                     })
 
         except Exception:
-            print(f"!!! ERREUR DETECTEE : {Exception}")
             context['save_error'] = True
             import traceback
             traceback.print_exc()
