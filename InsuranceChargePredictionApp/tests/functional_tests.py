@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class TestClientJourney(TestCase):
-    
+
     # Functional test for Client user journey
 
     def setUp(self):
@@ -81,7 +81,7 @@ class TestClientJourney(TestCase):
         self.assertEqual(user.role, "Client")
 
     def test_login(self):
-        
+
         # Preparation: we need a user first
         self.register_user()
 
@@ -91,14 +91,30 @@ class TestClientJourney(TestCase):
         # The redirection is verified in the helper
 
     def test_profile_update(self):
-        
+
         # A logged-in user can update their profile
 
+        # Preparation
+        self.register_user()
+        self.login_user()
+
+        # Action: update profile
+        # We send profile_data which contains age, height, etc.
+        response = self.client.post(self.profile_url, self.profile_data)
+
+        # Verification
+        # Check that we redirect to profile page (PRG pattern)
+        self.assertRedirects(response, self.profile_url)
+
+        # Check DB update
+        user = User.objects.get(email=self.email)
+        self.assertEqual(user.age, 35)
+        self.assertEqual(user.region, "northwest")
+
     def test_prediction(self):
-        
+
         # A user with a complete profile can get a prediction
 
-        
         # Full preparation
         self.register_user()
         self.login_user()
