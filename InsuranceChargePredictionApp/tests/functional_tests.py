@@ -37,9 +37,7 @@ class TestParcoursComplet(TestCase):
         """
         Test du parcours complet : Inscription -> Connexion -> Profil -> Prédiction
         """
-        # ==========================================
-        # 1. INSCRIPTION
-        # ==========================================
+        # INSCRIPTION
         print("\n--- Etape 1 : Inscription ---")
 
         # Vérification chargement page inscription
@@ -66,9 +64,7 @@ class TestParcoursComplet(TestCase):
         user = User.objects.get(email="client@test.com")
         self.assertEqual(user.first_name, "Jean")
 
-        # ==========================================
-        # 2. CONNEXION
-        # ==========================================
+        # CONNEXION
         print("--- Etape 2 : Connexion ---")
 
         login_data = {
@@ -84,10 +80,8 @@ class TestParcoursComplet(TestCase):
         # Vérification session active
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
-        # ==========================================
         # 3. MISE A JOUR PROFIL
-        # ==========================================
-        print("--- Etape 3 : Mise à jour Profil ---")
+        print(" Etape 3 : Mise à jour Profil")
 
         # Le client est maintenant connecté (session cookie)
         response = self.client.post(self.profile_url, self.profile_data)
@@ -103,10 +97,8 @@ class TestParcoursComplet(TestCase):
         self.assertIsNotNone(user.bmi)
         self.assertEqual(user.bmi, 24.7)  # 80 / (1.8*1.8) = 24.69... arrondi 24.7
 
-        # ==========================================
         # 4. PREDICTION
-        # ==========================================
-        print("--- Etape 4 : Prédiction ---")
+        print("Etape 4 : Prédiction")
 
         # Accès à la page prédiction (doit être pré-remplie)
         response = self.client.get(self.predict_url)
