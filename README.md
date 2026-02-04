@@ -6,13 +6,28 @@ Ce projet est une application web développée en Django qui permet de prédire 
 
 ## Description
 
-Cette application permet de prédire les charges d'assurance des individus en fonction de diverses caractéristiques telles que l'âge, le sexe, l'indice de masse corporelle (IMC), le nombre d'enfants, le tabagisme et la région de résidence.
+Le site contient plusieurs sections principales :
 
-## Fonctionnalités
+- **Accueil** : Présentation de l'application et de ses fonctionnalités.
+- **Inscription/Connexion** : Permet aux utilisateurs de créer un compte ou de se connecter.
+- **Prédiction** : Formulaire pour saisir les caractéristiques nécessaires à la prédiction des charges d'assurance.
+- **Résultats** : Affichage des résultats de la prédiction.
+- **Profil** : Gestion des informations utilisateur.
 
-- Prédiction des charges d'assurance basées sur les entrées utilisateur.
-- Interface utilisateur conviviale pour saisir les données.
-- Affichage des résultats de la prédiction.
+Selon que l'utilisateur est connecté ou non, certaines fonctionnalités peuvent être restreintes:
+
+- **Utilisateurs non connectés** : Accès limité à l'accueil, l'espace de prédiction, et à la page de connexion/inscription.
+- **Utilisateurs connectés** : Accès complet à toutes les fonctionnalités.
+
+## Technologies utilisées
+
+- Django : Framework web utilisé pour développer l'application.
+- Python : Langage de programmation principal.
+- HTML/CSS : Pour la structure et le style des pages web.
+- JavaScript : Pour les interactions côté client.
+- Gunicorn : Serveur d'applications WSGI pour déployer l'application.
+- Tailwind CSS : Framework CSS pour le design et la mise en page.
+- SQLite : Base de données utilisée pour stocker les informations utilisateur.
 
 ## Structure du projet
 
