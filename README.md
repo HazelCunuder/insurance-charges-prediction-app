@@ -1,5 +1,9 @@
 # Application de prédiction de charges d'assurance
 
+## Contexte
+
+Ce projet est une application web développée en Django qui permet de prédire les charges d'assurance des individus en fonction de diverses caractéristiques. L'application utilise un modèle de machine learning pour effectuer les prédictions et offre une interface utilisateur simple pour interagir avec le modèle.
+
 ## Description
 
 Cette application permet de prédire les charges d'assurance des individus en fonction de diverses caractéristiques telles que l'âge, le sexe, l'indice de masse corporelle (IMC), le nombre d'enfants, le tabagisme et la région de résidence.
