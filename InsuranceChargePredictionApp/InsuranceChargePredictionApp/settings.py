@@ -37,8 +37,6 @@ INSTALLED_APPS = [
     # Our Apps
     'accounts',
     'predict',
-    'appointment',
-    'docs',
     # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
