@@ -51,8 +51,8 @@ class CustomUserTests(TestCase):
             weight=70,  # kg
             height=1.75,  # meters
         )
-        # BMI = 70 / (1.75 * 1.75) = 22.857... -> rounded to 22.9
-        self.assertEqual(user.bmi, 22.9)
+        # BMI = 70 / (1.75 * 1.75) = 22.857... -> rounded to 22.86
+        self.assertEqual(user.bmi, 22.86)
 
     def test_bmi_calculation_missing_data(self):
         """Test BMI returns None if weight or height is missing."""
