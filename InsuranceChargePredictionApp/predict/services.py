@@ -12,9 +12,16 @@ def predict_charges(age, gender, smoker, weight, height, children, region):
         prediction_model = joblib.load(prediction_model_path)
     except FileNotFoundError:
         raise ModelNotFoundError('Le service de prédiction est introuvable.')
-    
 
+    
+    if not(30 <= weight <= 250):
+        raise ValueError('Le poids renseigné est incorrect.')
+    
+    if not(1 <= height <= 2.5):
+        raise ValueError('La taille renseignée est incorrecte.')
+    
     bmi = round(weight / (height ** 2), 2)
+
 
     new_data = pd.DataFrame({
         "age": [age],
@@ -25,7 +32,7 @@ def predict_charges(age, gender, smoker, weight, height, children, region):
         "region": [region]
     })
 
-    prediction = prediction_model.predict(new_data)[0]
+    prediction = round(prediction_model.predict(new_data)[0], 2)
 
 
     try:

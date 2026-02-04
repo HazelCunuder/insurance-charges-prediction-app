@@ -4,6 +4,8 @@ from .forms import PredictionForm
 from django.views.generic import FormView
 from .services import predict_charges, ModelNotFoundError
 from django.contrib.auth import get_user_model
+from django.db import transaction
+from .models import ClientInfos, Predictions
 
 User = get_user_model()
 
@@ -82,28 +84,66 @@ class PredictionView(FormView):
 
 
     def form_valid(self, form):
-        age = form.cleaned_data.get('age')
-        gender = form.cleaned_data.get('gender')
-        smoker = form.cleaned_data.get('smoker')
-        weight = form.cleaned_data.get('weight')
-        height = form.cleaned_data.get('height')
-        children = form.cleaned_data.get('children')
-        region = form.cleaned_data.get('region')
-
         try:
-            prediction, range_lower, range_upper = predict_charges(age, gender, smoker, weight, height, children, region)
+            data = form.cleaned_data
+
+            prediction, range_lower, range_upper = predict_charges(
+                data['age'], 
+                data['gender'], 
+                data['smoker'], 
+                data['weight'], 
+                data['height'], 
+                data['children'], 
+                data['region']
+            )
 
             context = self.get_context_data()
             context['form'] = form
-            context['prediction'] = round(prediction, 2)
+            context['prediction'] = prediction
 
             if range_lower and range_upper:
                 context['range_lower'] = range_lower
                 context['range_upper'] = range_upper
 
-            return render(self.request, self.template_name, context)
+        except ValueError:
+            form.add_error(None, 'Les données renseignées pour le poids et/ou la taille semblent incorrectes.')
+            return self.form_invalid(form)
         
         except ModelNotFoundError:
             form.add_error(None, 'Toutes nos excuses, le service de prédiction est momentanément indisponible.')
             return self.form_invalid(form)
         
+
+        try:
+            with transaction.atomic():
+                client, created = ClientInfos.objects.get_or_create(
+                    email = data['email'],
+                    first_name = data['first_name'].capitalize(),
+                    last_name = data['last_name'].capitalize(),
+                    defaults={'user': self.request.user if self.request.user.is_authenticated 
+                              and hasattr(self.request.user, 'role') and self.request.user.role == 'Client' 
+                              else None}
+                )
+
+                Predictions.objects.get_or_create(
+                    client = client,
+                    prediction = prediction,
+                    defaults={
+                        'created_by': self.request.user if self.request.user.is_authenticated else None, # Gérer les priorités
+                        'range_lower': range_lower if range_lower else None,
+                        'range_upper': range_upper if range_upper else None,
+                        'age': data['age'], 
+                        'gender': data['gender'], 
+                        'smoker': data['smoker'], 
+                        'weight': data['weight'], 
+                        'height': data['height'], 
+                        'children': data['children'], 
+                        'region': data['region']
+                    })
+
+        except Exception:
+            context['save_error'] = True
+            import traceback
+            traceback.print_exc()
+        
+        return render(self.request, self.template_name, context)

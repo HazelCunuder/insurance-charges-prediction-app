@@ -40,7 +40,6 @@ class PredictionViewTest(TestCase):
             role='Client',
         )
 
-    # Tests URL et templates
 
     def test_prediction_view_uses_correct_template(self):
         response = self.client.get(reverse('prediction'))
@@ -93,8 +92,6 @@ class PredictionViewTest(TestCase):
             }
         self.assertEqual(response.context['form'].initial, expected_infos)
 
-
-    # Tests authentification & autorisations
 
     def test_prediction_view_context_is_advisor_has_correct_value(self):
         response = self.client.get(reverse('prediction'))
@@ -162,11 +159,8 @@ class PredictionViewTest(TestCase):
         self.assertContains(response, 'name="email" value="jbernard@hotmail.fr"')
 
 
-    # Tests validation du formulaire
 
-
-
-class PredictionViewPredictTests(TestCase):
+class PredictionViewFormTests(TestCase):
 
     def setUp(self):
         self.data = {
@@ -174,7 +168,7 @@ class PredictionViewPredictTests(TestCase):
             'last_name': 'Marchand',
             'email': 'alice.marchand@gmail.com',
             'age': 20,
-            'gender': 'male',
+            'gender': 'female',
             'smoker': 'no',
             'weight': 78.5,
             'height': 1.78,
@@ -183,13 +177,112 @@ class PredictionViewPredictTests(TestCase):
             }
 
 
+    def test_prediction_form_incomplete_returns_error(self):
+        data_incomplete = {
+            'first_name': 'Alice',
+            'last_name': 'Marchand',
+            'gender': 'female',
+            'smoker': 'no',
+            'children': 2,
+            'height': 1.78
+        }
+
+        response = self.client.post(reverse('prediction'), data=data_incomplete)
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        self.assertIn('age', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('weight', form.errors)
+
+
+    def test_predicttion_form_valid_keeps_data(self):
+        response = self.client.post(reverse('prediction'), data=self.data)
+
+        form = response.context['form']
+        self.assertTrue(form.is_valid())
+
+        self.assertEqual(form.cleaned_data['age'], 20)
+        self.assertEqual(form.cleaned_data['smoker'], 'no')
+
+
+    def test_prediction_form_invalid_data_scenarios(self):
+        scenarios = [
+            ({'first_name': 'A'}, 'first_name', 'Le prénom doit comporter au moins 2 caractères.'),
+            ({'first_name': 'A' * 51}, 'first_name', 'Le prénom ne peut pas contenir plus de 50 caractères.'),
+
+            ({'last_name': 'A'}, 'last_name', 'Le nom doit comporter au moins 2 caractères.'),
+            ({'last_name': 'A' * 51}, 'last_name', 'Le nom ne peut pas contenir plus de 50 caractères.'),
+
+            ({'email': 'invalid-email'}, 'email', 'Veuillez renseigner une adresse email valide.'),
+            ({'email': 'test@pasdepoint'}, 'email', 'Veuillez renseigner une adresse email valide.'),
+            ({'email': '@invalid.mail'}, 'email', 'Veuillez renseigner une adresse email valide.'),
+
+            ({'age': 17}, 'age', 'Le client doit avoir 18 ans minimum.'),
+            ({'age': 126}, 'age', 'L\'âge ne peut pas dépasser 125.'),
+            ({'age': 35.9}, 'age', 'L\'âge doit être un nombre entier.'),
+            ({'age': 'dix-huit'}, 'age', 'L\'âge doit être un nombre entier.'),
+
+            ({'gender': 'Chat'}, 'gender', 'Ce choix n\'est pas valide.'),
+            ({'smoker': 'Vapoteur'}, 'smoker', 'Ce choix n\'est pas valide.'),
+            ({'region': 'Centre'}, 'region', 'Ce choix n\'est pas valide.'),
+
+            ({'weight': 29.9}, 'weight', 'Le poids ne peut pas être inférieur à 30 kg.'),
+            ({'weight': 250.1}, 'weight', 'Le poids ne peut pas dépasser 250 kg.'),
+            ({'weight': 65.89}, 'weight', 'Le poids doit être un nombre au format 60 ou 60.1.') ,
+            ({'weight': 'soixante'}, 'weight', 'Le poids doit être un nombre au format 60 ou 60.1.'),
+
+            ({'height': 0.99}, 'height', 'La taille ne peut pas être inférieure à 1 mètre.'),
+            ({'height': 2.51}, 'height', 'La taille ne peut pas dépasser 2,5 mètres.'),
+            ({'height': 1.654}, 'height', 'La taille doit être un nombre avec maximum deux décimales (ex : 1.65).'),
+            ({'height': 'deux mètres'}, 'height', 'La taille doit être un nombre.'),
+
+            ({'children': -1}, 'children', 'Le nombre d\'enfants ne peut pas être négatif.'),
+            ({'children': 16}, 'children', 'Le nombre d\'enfants ne peut pas dépasser 15.'),
+            ({'children': 2.5}, 'children', 'Le nombre d\'enfants doit être un nombre entier.'),
+            ({'children': 'deux'}, 'children', 'Le nombre d\'enfants doit être un nombre entier.'),
+        ]
+
+        for invalid_input, field, expected_error in scenarios:
+            data = self.data.copy()
+            data.update(invalid_input)
+
+            form = PredictionForm(data=data)
+            self.assertFalse(form.is_valid())
+
+            field_error = form.errors[field][0]
+
+            self.assertEqual(expected_error, field_error, 
+                f"\nLe champ '{field}' n'a pas l'erreur attendue.\n"
+                f"Attendu : {expected_error}\n"
+                f"Obtenu : {field_error}"
+    )
+
+
+    def test_prediction_form_strips_whitespaces(self):
+        data_with_whitespaces = self.data.copy()
+        data_with_whitespaces.update({
+            'first_name': '   Alice   ',
+            'last_name': '   Marchand   ',
+            'email': '   alice.marchand@gmail.com   ',
+        })
+
+        form = PredictionForm(data=data_with_whitespaces)
+        self.assertTrue(form.is_valid())
+
+        self.assertEqual(form.cleaned_data['first_name'], 'Alice')
+        self.assertEqual(form.cleaned_data['last_name'], 'Marchand')
+        self.assertEqual(form.cleaned_data['email'], 'alice.marchand@gmail.com')
+
+
     @patch('predict.views.predict_charges')
     def test_prediction_view_form_validation_calls_predict_charges(self, mock_predict):
         mock_predict.return_value = (3000.50, 1000, 7000.50)
 
         response = self.client.post(reverse('prediction'), data=self.data)
 
-        mock_predict.assert_called_once_with(20, 'male', 'no', 78.5, 1.78, 2, 'southeast')
+        mock_predict.assert_called_once_with(20, 'female', 'no', 78.5, 1.78, 2, 'southeast')
         self.assertEqual(response.context['prediction'], 3000.50)
         self.assertEqual(response.context['range_lower'], 1000)
         self.assertEqual(response.context['range_upper'], 7000.50)
