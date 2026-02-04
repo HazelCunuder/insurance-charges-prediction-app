@@ -40,7 +40,7 @@ class PredictionForm(forms.Form):
             'required': 'Veuillez renseigner un âge.',
             'min_value': 'Le client doit avoir 18 ans minimum.',
             'max_value': 'L\'âge ne peut pas dépasser 125.',
-            'invalid': 'L\'âge doit être un nombre entier entre 18 et 125.'
+            'invalid': 'L\'âge doit être un nombre entier.'
         })
 
     gender = forms.ChoiceField(
@@ -60,7 +60,8 @@ class PredictionForm(forms.Form):
             'required': 'Veuillez renseigner un poids.',
             'min_value': 'Le poids ne peut pas être inférieur à 30 kg.',
             'max_value': 'Le poids ne peut pas dépasser 250 kg.',
-            'invalid': 'Le poids doit être un nombre compris entre 30 et 250.'
+            'step_size': 'Le poids doit être un nombre au format 60 ou 60.1.',
+            'invalid': 'Le poids doit être un nombre au format 60 ou 60.1.'
         })
 
     height = forms.FloatField(
@@ -72,7 +73,8 @@ class PredictionForm(forms.Form):
             'required': 'Veuillez renseigner une taille.',
             'min_value': 'La taille ne peut pas être inférieure à 1 mètre.',
             'max_value': 'La taille ne peut pas dépasser 2,5 mètres.',
-            'invalid': 'La taille doit être un nombre compris entre 1 et 2,5.'
+            'step_size': 'La taille doit être un nombre avec maximum deux décimales (ex : 1.65).',
+            'invalid': 'La taille doit être un nombre.'
         })
 
     smoker = forms.ChoiceField(
@@ -91,7 +93,7 @@ class PredictionForm(forms.Form):
             'required': 'Veuillez renseigner le nombre d\'enfants.',
             'min_value': 'Le nombre d\'enfants ne peut pas être négatif.',
             'max_value': 'Le nombre d\'enfants ne peut pas dépasser 15.',
-            'invalid': 'Le nombre d\'enfants doit être un nombre entier entre 0 et 15.'
+            'invalid': 'Le nombre d\'enfants doit être un nombre entier.'
         })
 
     region = forms.ChoiceField(
