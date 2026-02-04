@@ -87,6 +87,12 @@
                 </div>
             {% endif %}
 
+            {% if is_advisor and save_error %}
+                <div class="label-text-alt text-error font-semibold">
+                    <p>Erreur lors de la sauvegarde de la prédiction.</p>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 </section>

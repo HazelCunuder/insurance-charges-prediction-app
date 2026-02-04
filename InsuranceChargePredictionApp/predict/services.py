@@ -13,7 +13,6 @@ def predict_charges(age, gender, smoker, weight, height, children, region):
     except FileNotFoundError:
         raise ModelNotFoundError('Le service de prédiction est introuvable.')
     
-
     bmi = round(weight / (height ** 2), 2)
 
     new_data = pd.DataFrame({
@@ -25,7 +24,7 @@ def predict_charges(age, gender, smoker, weight, height, children, region):
         "region": [region]
     })
 
-    prediction = prediction_model.predict(new_data)[0]
+    prediction = round(prediction_model.predict(new_data)[0], 2)
 
 
     try:
