@@ -81,7 +81,7 @@ class CustomUser(AbstractUser):
     @property
     def bmi(self):
         if self.height and self.height > 0 and self.weight:
-            return round(self.weight / (self.height**2), 1)
+            return round(self.weight / (self.height**2), 2)
         return None
 
     # Configuration
