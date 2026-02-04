@@ -7,7 +7,6 @@ User = get_user_model()
 
 class CustomUserTests(TestCase):
     def test_create_user(self):
-        """Test creating a standard user with email and password."""
         user = User.objects.create_user(
             email="test@example.com",
             password="password123",
@@ -21,7 +20,6 @@ class CustomUserTests(TestCase):
         self.assertEqual(str(user), "Test User (test@example.com)")
 
     def test_create_superuser(self):
-        """Test creating a superuser."""
         admin_user = User.objects.create_superuser(
             email="admin@example.com",
             password="adminpassword123",
@@ -33,18 +31,15 @@ class CustomUserTests(TestCase):
         self.assertTrue(admin_user.is_superuser)
 
     def test_create_user_no_email(self):
-        """Test that creating a user without an email raises a ValueError."""
         with self.assertRaises(ValueError):
             User.objects.create_user(email="", password="password123")
 
     def test_create_user_duplicate_email(self):
-        """Test that creating a user with a duplicate email raises an IntegrityError."""
         User.objects.create_user(email="test@example.com", password="password123")
         with self.assertRaises(IntegrityError):
             User.objects.create_user(email="test@example.com", password="password456")
 
     def test_bmi_calculation(self):
-        """Test the BMI property calculation."""
         user = User.objects.create_user(
             email="bmi@example.com",
             password="password",
@@ -55,7 +50,6 @@ class CustomUserTests(TestCase):
         self.assertEqual(user.bmi, 22.86)
 
     def test_bmi_calculation_missing_data(self):
-        """Test BMI returns None if weight or height is missing."""
         user = User.objects.create_user(
             email="nobmi@example.com", password="password", weight=70
         )
