@@ -2,8 +2,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from .forms import PredictionForm
 from django.views.generic import FormView
-import pandas as pd
-from .services import predict_charges
+from .services import predict_charges, ModelNotFoundError
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -86,19 +85,25 @@ class PredictionView(FormView):
         age = form.cleaned_data.get('age')
         gender = form.cleaned_data.get('gender')
         smoker = form.cleaned_data.get('smoker')
-        region = form.cleaned_data.get('region')
-        children = form.cleaned_data.get('children')
         weight = form.cleaned_data.get('weight')
         height = form.cleaned_data.get('height')
-        bmi = weight / (height ** 2)
+        children = form.cleaned_data.get('children')
+        region = form.cleaned_data.get('region')
 
-        prediction, range_lower, range_upper = predict_charges(age, children, smoker, bmi, gender, region)
+        try:
+            prediction, range_lower, range_upper = predict_charges(age, gender, smoker, weight, height, children, region)
 
-        context = self.get_context_data()
-        context['form'] = form
-        context['prediction'] = round(prediction, 2)
-        context['range_lower'] = range_lower
-        context['range_upper'] = range_upper
+            context = self.get_context_data()
+            context['form'] = form
+            context['prediction'] = round(prediction, 2)
 
-        return render(self.request, self.template_name, context)
+            if range_lower and range_upper:
+                context['range_lower'] = range_lower
+                context['range_upper'] = range_upper
+
+            return render(self.request, self.template_name, context)
+        
+        except ModelNotFoundError:
+            form.add_error(None, 'Toutes nos excuses, le service de prédiction est momentanément indisponible.')
+            return self.form_invalid(form)
         
