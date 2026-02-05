@@ -26,7 +26,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', "127.0.0.1,localhost,0.0.0.0").split(',')
 
-# CONFIGURATION AUTHENTIFICATION CRITIQUE (AJOUTÉ)
+# CONFIGURATION AUTHENTIFICATION CRITIQUE
 AUTH_USER_MODEL = "accounts.CustomUser"  # DOIT ÊTRE DÉFINI AVANT TOUTE MIGRATION
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "predict:dashboard"  # À adapter selon votre structure
