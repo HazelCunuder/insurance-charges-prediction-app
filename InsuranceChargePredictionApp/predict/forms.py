@@ -1,6 +1,8 @@
 from django import forms
 
 class PredictionForm(forms.Form):
+    """ Formulaire pour générer une prédiction des charges d'assurance. """
+    
     GENDER_CHOICES = [('', '- - - - - - -'), ('female', 'Femme'), ('male', 'Homme')]
     SMOKER_CHOICES = [('', '- - - -'), ('yes', 'Oui'), ('no', 'Non')]
     REGION_CHOICES = [('', '- - - - - - - - - - -'), ('northeast', 'Nord-Est'), ('northwest', 'Nord-Ouest'), ('southeast', 'Sud-Est'), ('southwest', 'Sud-Ouest')]
