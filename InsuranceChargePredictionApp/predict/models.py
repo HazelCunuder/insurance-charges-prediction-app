@@ -3,6 +3,8 @@ from django.conf import settings
 
 
 class ClientInfos(models.Model):
+    """Modèle avec les informations de contact des utilisateurs ayant généré une prédiction. """
+    
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -27,6 +29,8 @@ class ClientInfos(models.Model):
 
 
 class Predictions(models.Model):
+    """Modèle avec les informations utilisées pour générer une prédiction et les résultats associés. """
+    
     date = models.DateTimeField(auto_now_add=True)
 
     # Infos de contact client supprimées : inutile de garder les prédictions associées

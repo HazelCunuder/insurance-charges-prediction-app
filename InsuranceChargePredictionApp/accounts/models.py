@@ -29,7 +29,6 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     """
     Modèle utilisateur personnalisé étendant AbstractUser de Django.
-    Remplace complètement l'ancien UserAuthentification vulnérable.
     """
 
     ROLE_CHOICES = [("Client", _("Client")), ("Advisor", _("Conseiller"))]
