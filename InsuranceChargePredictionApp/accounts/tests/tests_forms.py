@@ -22,12 +22,6 @@ VALID_SIGNUP_DATA = {
     "password2": "Str0ng!Pass99",
 }
 
-
-# ===========================================================================
-# TESTS CUSTOMAUTHENTICATIONFORM
-# ===========================================================================
-
-
 class TestCustomAuthenticationForm(TestCase):
     """Tests du formulaire de connexion"""
 
@@ -92,12 +86,6 @@ class TestCustomAuthenticationForm(TestCase):
             "password": "Str0ng!Pass99",
         })
         self.assertFalse(form.is_valid())
-
-
-# ===========================================================================
-# TESTS CUSTOMUSERCREATIONFORM
-# ===========================================================================
-
 
 class TestCustomUserCreationForm(TestCase):
     """Tests du formulaire d'inscription"""
@@ -215,12 +203,6 @@ class TestCustomUserCreationForm(TestCase):
         data = {**VALID_SIGNUP_DATA, "first_name": "   "}
         form = CustomUserCreationForm(data=data)
         self.assertFalse(form.is_valid())
-
-
-# ===========================================================================
-# TESTS USERPROFILEFORM
-# ===========================================================================
-
 
 class TestUserProfileForm(TestCase):
     """Tests du formulaire de profil"""
