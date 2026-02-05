@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord - {{ user.first_name }}{% endblock %}
+
+{% block content %}
+<section class="py-6 sm:py-12 grow flex">
+    <div class="max-w-6xl w-full mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8 items-center grow">
+        <div class="flex flex-col md:flex-row justify-between items-center bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] shadow-lg sm:shadow-xl shadow-gray-200/50 border border-gray-100 gap-6 sm:gap-8">
+            <div class="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
+                <div class="relative group">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl sm:rounded-4xl bg-linear-to-br from-brand-blue to-brand-red-light flex items-center justify-center text-white text-3xl sm:text-5xl font-black shadow-lg sm:shadow-2xl shadow-blue-500/20 hover:rotate-3 transition-transform">
+                        {{ user.first_name|first }}{{ user.last_name|first }}
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 border-4 border-white rounded-full shadow-lg"></div>
+                </div>
+                
+                <div>
+                    <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2 justify-center md:justify-start">
+                        <h1 class="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight">{{ user.get_full_name }}</h1>
+                        <span class="badge bg-blue-50 text-brand-blue border-none font-bold uppercase tracking-widest text-[8px] sm:text-[10px] py-2 sm:py-3 px-3 sm:px-4">
+                            {{ user.get_role_display }}
+                        </span>
+                    </div>
+                    <p class="text-gray-500 font-medium flex items-center gap-2 justify-center md:justify-start">
+                        <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        {{ user.email }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Stats & Info -->
+            <div class="lg:col-span-1 space-y-6 w-full">
+                <div class="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-4xl shadow-lg shadow-gray-200/40 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4 sm:mb-6">Résumé d'assurance</p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-500">Âge</span>
+                            <span class="text-sm font-black text-gray-900">{{ user.age|default:"--" }} ans</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-500">IMC</span>
+                            <span class="text-sm font-black text-gray-900">{{ user.bmi|default:"--" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-500">{% if user.gender == "female"%}Fumeuse{% else %}Fumeur{%endif%}</span>
+                            <span class="text-sm font-black {% if user.smoker %}text-red-500{% else %}text-green-500{% endif %}">
+                                {{ user.smoker|yesno:"Oui,Non" }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-500">Enfants</span>
+                            <span class="text-sm font-black text-gray-900">{{ user.children }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit-profile" class="lg:col-span-2 bg-white p-6 sm:p-10 rounded-2xl sm:rounded-[2.5rem] shadow-lg sm:shadow-xl shadow-gray-200/50 border border-gray-100">
+                <h2 class="text-lg sm:text-2xl font-black text-gray-900 mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
+                    <span class="p-2 sm:p-3 bg-blue-50 text-brand-blue rounded-lg sm:rounded-xl">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </span>
+                    Modifier mes caractéristiques
+                </h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for field in form %}
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-bold text-gray-700">{{ field.label }}</span>
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <label class="label">
+                                    <span class="label-text-alt text-error font-semibold">{{ field.errors|striptags }}</span>
+                                </label>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="pt-4 sm:pt-6">
+                        <button type="submit" class="btn btn-block bg-brand-blue hover:bg-brand-red-dark text-white border-none font-black text-base sm:text-lg h-11 sm:h-14 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-blue-500/20 transition-all">
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

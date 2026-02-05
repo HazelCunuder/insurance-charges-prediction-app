@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}/static/javascript/home.js{% endblock %}
+{% block title %}Assur'Aimant{% endblock %}
+
+{% block content %}
+<section class="py-12">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-4 text-black">Bienvenue chez Assur'Aimant</h2>
+        <p class="text-lg text-black">Votre application de prédiction des charges d'assurance, fiable et précise.</p>
+        <img src="{% static 'assets/image-assuraimant.jpg' %}" alt="Image d'assur'aimant" class="mx-auto mt-8 rounded-lg shadow-md w-1/2">
+    </div>
+</section>
+
+<section class="bg-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 gap-8">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-black">Notre application</h3>
+                <p class="text-black">Découvrez comment notre application utilise un modèle IA pour prédire les charges d'assurance en fonction de divers facteurs.</p>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-black">Objectif</h3>
+                <ul class="list-none list-inside text-black">
+                    <li>Fournir des prédictions précises des charges d'assurance.</li>
+                    <li>Aider les conseillers à mieux comprendre leurs coûts d'assurance.</li>
+                    <li>Améliorer la prise de décision en matière d'assurance.</li>
+                </ul> 
+            </div>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-black">Mode d'emploi</h3>
+                <ul class="list-none list-inside text-black">
+                    <li>Accédez à la section de prédiction.</li>
+                    <li>Renseignez les informations requises.</li>
+                    <li>Obtenez instantanément votre prédiction de charges d'assurance.</li>
+                </ul>
+            </div>
+    </div>
+</section>
+
+<button id="scrollToTopBtn" class="fixed bottom-4 w-12 h-12 right-4 bg-brand-red-dark text-white p-3 rounded-full shadow-lg hover:bg-red-900 focus:outline-none">
+    ↑
+</button>
+{% endblock %}

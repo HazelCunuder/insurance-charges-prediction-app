@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Accès client - Assur'Aimant{% endblock %}
+
+{% block content %}
+<section class="flex items-center justify-center min-h-[80vh] py-12">
+    <div class="mesh-gradient-premium border border-gray-200 p-1 rounded-[2.5rem] shadow-xl shadow-gray-200/50">
+        <div class="elite-glass p-10 rounded-[2.5rem] w-full max-w-lg animate-in fade-in zoom-in duration-500">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center p-4 bg-brand-blue text-white rounded-3xl shadow-xl shadow-blue-500/20 mb-6">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-4xl font-black text-gray-900 tracking-tight mb-3">Espace personnel</h2>
+                <p class="text-gray-500 font-medium">Connectez-vous pour accéder à vos prédictions</p>
+            </div>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold text-gray-700">{{ form.username.label }}</span>
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error font-semibold">{{ form.username.errors|striptags }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+                
+                <div class="form-control">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="label p-0">
+                            <span class="label-text font-bold text-gray-700">{{ form.password.label }}</span>
+                        </label>
+                        <a href="#" class="text-xs font-bold text-brand-blue hover:underline opacity-70">Mot de passe oublié ?</a>
+                    </div>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error font-semibold">{{ form.password.errors|striptags }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="label-text-alt text-error font-semibold">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <button type="submit"
+                        class="btn btn-block bg-brand-blue hover:bg-brand-red-dark border-none text-white font-black text-lg h-14 rounded-2xl shadow-2xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-95 group">
+                    Se connecter
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="mt-12 pt-8 border-t border-white/40 text-center">
+                <p class="text-gray-500 font-medium">
+                    Nouveau chez Assur'Aimant ? 
+                    <a href="{% url 'accounts:signup' %}" class="text-brand-red-dark font-black hover:underline ml-1">Nous rejoindre</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
