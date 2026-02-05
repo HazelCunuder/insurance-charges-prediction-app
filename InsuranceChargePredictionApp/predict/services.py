@@ -22,7 +22,7 @@ def predict_charges(age, gender, smoker, weight, height, children, region):
     
     bmi = round(weight / (height ** 2), 2)
 
-    if bmi < 12:
+    if bmi < 13:
         raise ValueError('Le BMI n\'est pas valide.')
 
 
