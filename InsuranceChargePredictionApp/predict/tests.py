@@ -376,6 +376,23 @@ class PredictChargesTest(TestCase):
         self.assertEqual(expected_bmi, actual_bmi)
 
 
+    def test_predict_charges_illogical_bmi_raises_error(self):
+        invalid_data = {
+            'age': 30,
+            'gender': 'female',
+            'smoker': 'no',
+            'weight': 50,
+            'height': 2.1,
+            'children': 0,
+            'region': 'southwest'
+        }
+
+        with self.assertRaises(ValueError) as cm:
+            predict_charges(**invalid_data)
+        
+        self.assertEqual(str(cm.exception), 'Le BMI n\'est pas valide.')
+
+
     @patch('predict.services.joblib.load')
     def test_predict_charges_returns_error_if_model_not_found(self, mock_load):
         mock_load.side_effect = FileNotFoundError
