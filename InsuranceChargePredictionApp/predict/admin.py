@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import ClientInfos, Predictions
 
-# Register your models here.
+admin.site.register(Predictions)
+admin.site.register(ClientInfos)

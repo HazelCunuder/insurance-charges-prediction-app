@@ -22,6 +22,8 @@ class ClientInfos(models.Model):
                 fields = ['first_name', 'last_name', 'email'],
                 name = 'unique_client_profile'
             )]
+        verbose_name = 'Infos clients'
+        verbose_name_plural = 'Infos clients'
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.email})'
@@ -59,6 +61,15 @@ class Predictions(models.Model):
     
     REGION_CHOICES = [('southwest', 'Sud-Ouest'), ('southeast', 'Sud-Est'), ('northwest', 'Nord-Ouest'), ('northeast', 'Nord-Est')]
     region = models.CharField(max_length=10, choices=REGION_CHOICES)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields = ['created_by', 'prediction'],
+                name = 'unique_prediction'
+            )]
+        verbose_name = 'Prédictions'
+        verbose_name_plural = 'Prédictions'
 
     def __str__(self):
         return f'Client {self.client} : {self.prediction} €'
